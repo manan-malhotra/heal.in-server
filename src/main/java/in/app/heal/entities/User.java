@@ -40,4 +40,8 @@ public class User {
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
   private List<Votes> votes;
+
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
+             orphanRemoval = true)
+  private List<Comments> comments;
 }

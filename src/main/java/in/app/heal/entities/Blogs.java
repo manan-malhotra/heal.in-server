@@ -37,4 +37,8 @@ public class Blogs {
   @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
   private Set<Votes> votes = new HashSet<>();
+
+  @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL,
+             orphanRemoval = true)
+  private Set<Comments> comments = new HashSet<>();
 }
