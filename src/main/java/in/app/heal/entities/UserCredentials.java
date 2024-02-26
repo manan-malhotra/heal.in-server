@@ -22,6 +22,9 @@ public class UserCredentials {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user_id;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(name = "role", nullable = false)
     private String role;
 

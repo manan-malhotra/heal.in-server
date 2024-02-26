@@ -20,24 +20,21 @@ public class User {
   @Column(name = "user_id")
   private Integer user_id;
 
-  @Column(name = "first_name", nullable = false) private String first_name;
+  @Column(name = "first_name", nullable = false)
+  private String first_name;
 
-  @Column(name = "last_name", nullable = false) private String last_name;
-
-  @Column(name = "email", nullable = false) private String email;
+  @Column(name = "last_name", nullable = false)
+  private String last_name;
 
   @Column(name = "contact_number", nullable = false)
   private Long contact_number;
 
-  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
-             orphanRemoval = true)
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<JournalEntry> journalEntries;
 
-  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
-             orphanRemoval = true)
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Blogs> blogs;
 
-  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
-             orphanRemoval = true)
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Votes> votes;
 }
