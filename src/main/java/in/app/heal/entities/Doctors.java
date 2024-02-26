@@ -27,9 +27,11 @@ public class Doctors {
   @Column(name = "specialization", nullable = false)
   private String specialization;
 
-  @Column(name = "experience", nullable = false) private String experience;
+  @Column(name = "experience", nullable = false)
+  private String experience;
 
-  @Column(name = "degree", nullable = false) private String degree;
+  @Column(name = "degree", nullable = false)
+  private String degree;
 
   @Column(name = "license_number", nullable = false)
   private String license_number;

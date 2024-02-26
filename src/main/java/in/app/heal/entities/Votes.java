@@ -20,13 +20,11 @@ public class Votes {
   private Integer vote_id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id",
-              nullable = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
   private User user_id;
 
   @ManyToOne
-  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id",
-              nullable = false)
+  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id", nullable = false)
   private Blogs blog_id;
 
   @Enumerated(EnumType.STRING)

@@ -22,20 +22,20 @@ public class Blogs {
   private Integer blog_id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id",
-              nullable = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
   private User user_id;
 
-  @Column(name = "title", nullable = false) private String title;
+  @Column(name = "title", nullable = false)
+  private String title;
 
-  @Column(name = "description", nullable = false) private String description;
+  @Column(name = "description", nullable = false)
+  private String description;
 
   @Column(name = "post_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date post_date;
 
-  @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL,
-             orphanRemoval = true)
+  @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Votes> votes = new HashSet<>();
 
   @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL,
