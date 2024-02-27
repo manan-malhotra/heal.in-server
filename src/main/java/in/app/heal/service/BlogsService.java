@@ -23,6 +23,11 @@ public class BlogsService {
     return repository.findById(id);
   }
 
+  public Optional<Blogs> fetchById(int id) {
+    Optional<Blogs> blog = repository.findById(id);
+    return blog;
+  }
+
   public void deleteBlogsById(int id) { repository.deleteById(id); }
 
   public void deleteAllBlogs() { repository.deleteAll(); }
