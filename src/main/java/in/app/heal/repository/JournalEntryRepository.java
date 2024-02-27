@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface JournalEntryRepository extends JpaRepository<JournalEntry,Integer> {
 
-    @Query(value = "SELECT * FROM journal_entry WHERE user_id = ?1",nativeQuery = true)
+    @Query(value = "SELECT * FROM journal_entry WHERE user_id = ?1 ORDER BY entry_date DESC",nativeQuery = true)
     public Optional<List<JournalEntry>> findAllByUserId(Integer userId);
 }
