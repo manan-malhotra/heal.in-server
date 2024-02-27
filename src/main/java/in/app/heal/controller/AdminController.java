@@ -1,15 +1,21 @@
 package in.app.heal.controller;
 
+import in.app.heal.aux.AuxBlogsDTO;
 import in.app.heal.aux.AuxSelfHelpVideosDTO;
 import in.app.heal.aux.AuxTestDTO;
+import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.entities.ADHDTest;
 import in.app.heal.entities.AnxietyTest;
+import in.app.heal.entities.Blogs;
 import in.app.heal.entities.DepressionTest;
 import in.app.heal.entities.SelfHelpVideos;
+import in.app.heal.entities.User;
 import in.app.heal.service.ADHDTestService;
 import in.app.heal.service.AnxietyTestService;
+import in.app.heal.service.BlogsService;
 import in.app.heal.service.DepressionTestService;
 import in.app.heal.service.SelfHelpVideosService;
+import in.app.heal.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +34,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
   @Autowired private DepressionTestService depressionTestService;
 
+  @Autowired private UserService userService;
+
   @Autowired private AnxietyTestService anxietyTestService;
 
   @Autowired private ADHDTestService adhdTestService;
 
   @Autowired private SelfHelpVideosService selfHelpVideosService;
+
+  @Autowired private BlogsService blogsService;
 
   @PostMapping("/addDepressionTest")
   public ResponseEntity<AuxTestDTO>
@@ -196,5 +206,51 @@ public class AdminController {
   @DeleteMapping("/deleteAllSelfHelpVideos")
   public void deleteAllSelfHelpVideos() {
     selfHelpVideosService.deleteAllSelfHelpVideos();
+  }
+
+  @GetMapping("/getAllBlogs")
+  public List<Blogs> getAllBlogs() {
+    return blogsService.getBlogsAll();
+  }
+
+  @PostMapping("/addBlogs")
+  public ResponseEntity<AuxBlogsDTO>
+  addBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    Blogs blogs = new Blogs();
+    blogs.setTitle(auxBlogsDTO.getTitle());
+    blogs.setDescription(auxBlogsDTO.getDescription());
+    blogs.setPost_date(auxBlogsDTO.getPost_date());
+    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
+    if (user.isPresent()) {
+      blogs.setUser_id(user.get());
+    }
+    blogsService.addBlogs(blogs);
+    return new ResponseEntity<>(auxBlogsDTO, HttpStatus.OK);
+  }
+
+  @PostMapping("/updateBlogs")
+  public void updateBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    Blogs blogs = new Blogs();
+    blogs.setBlog_id(auxBlogsDTO.getBlog_id());
+    blogs.setTitle(auxBlogsDTO.getTitle());
+    blogs.setDescription(auxBlogsDTO.getDescription());
+    blogs.setPost_date(auxBlogsDTO.getPost_date());
+    // blogs.setUser_id(auxBlogsDTO.getUser_id());
+    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
+    if (user.isPresent()) {
+      blogs.setUser_id(user.get());
+    }
+
+    blogsService.updateBlogs(blogs);
+  }
+
+  @DeleteMapping("/deleteBlogs/{id}")
+  public void deleteBlogsById(@PathVariable("id") int id) {
+    blogsService.deleteBlogsById(id);
+  }
+
+  @DeleteMapping("/deleteAllBlogs")
+  public void deleteAllBlogs() {
+    blogsService.deleteAllBlogs();
   }
 }

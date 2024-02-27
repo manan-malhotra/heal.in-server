@@ -30,7 +30,7 @@ public class Blogs {
 
   @Column(name = "description", nullable = false) private String description;
 
-  @Column(name = "post_date", nullable = false)
+  @Column(name = "post_date", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date post_date;
 
