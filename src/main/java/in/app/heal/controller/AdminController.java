@@ -1,14 +1,15 @@
 package in.app.heal.controller;
 
-import in.app.heal.aux.AuxADHDTestDTO;
-import in.app.heal.aux.AuxAnxietyTestDTO;
-import in.app.heal.aux.AuxDepressionTestDTO;
+import in.app.heal.aux.AuxSelfHelpVideosDTO;
+import in.app.heal.aux.AuxTestDTO;
 import in.app.heal.entities.ADHDTest;
 import in.app.heal.entities.AnxietyTest;
 import in.app.heal.entities.DepressionTest;
+import in.app.heal.entities.SelfHelpVideos;
 import in.app.heal.service.ADHDTestService;
 import in.app.heal.service.AnxietyTestService;
 import in.app.heal.service.DepressionTestService;
+import in.app.heal.service.SelfHelpVideosService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,11 @@ public class AdminController {
 
   @Autowired private ADHDTestService adhdTestService;
 
+  @Autowired private SelfHelpVideosService selfHelpVideosService;
+
   @PostMapping("/addDepressionTest")
-  public ResponseEntity<AuxDepressionTestDTO>
-  addDepressionTest(@RequestBody AuxDepressionTestDTO auxDepressionTestDTO) {
+  public ResponseEntity<AuxTestDTO>
+  addDepressionTest(@RequestBody AuxTestDTO auxDepressionTestDTO) {
     DepressionTest depressionTest = new DepressionTest();
     depressionTest.setQuestion(auxDepressionTestDTO.getQuestion());
     depressionTest.setOption1(auxDepressionTestDTO.getOption1());
@@ -46,7 +49,7 @@ public class AdminController {
 
   @PostMapping("/updateDepressionTest")
   public void
-  updateDepressionTest(@RequestBody AuxDepressionTestDTO auxDepressionTestDTO) {
+  updateDepressionTest(@RequestBody AuxTestDTO auxDepressionTestDTO) {
     DepressionTest depressionTest = new DepressionTest();
     depressionTest.setId(auxDepressionTestDTO.getId());
     depressionTest.setQuestion(auxDepressionTestDTO.getQuestion());
@@ -73,8 +76,8 @@ public class AdminController {
   }
 
   @PostMapping("/addAnxietyTest")
-  public ResponseEntity<AuxAnxietyTestDTO>
-  addAnxietyTest(@RequestBody AuxAnxietyTestDTO auxAnxietyTestDTO) {
+  public ResponseEntity<AuxTestDTO>
+  addAnxietyTest(@RequestBody AuxTestDTO auxAnxietyTestDTO) {
     AnxietyTest anxietyTest = new AnxietyTest();
     anxietyTest.setQuestion(auxAnxietyTestDTO.getQuestion());
     anxietyTest.setOption1(auxAnxietyTestDTO.getOption1());
@@ -86,8 +89,7 @@ public class AdminController {
   }
 
   @PostMapping("/updateAnxietyTest")
-  public void
-  updateAnxietyTest(@RequestBody AuxAnxietyTestDTO auxAnxietyTestDTO) {
+  public void updateAnxietyTest(@RequestBody AuxTestDTO auxAnxietyTestDTO) {
     AnxietyTest anxietyTest = new AnxietyTest();
     anxietyTest.setId(auxAnxietyTestDTO.getId());
     anxietyTest.setQuestion(auxAnxietyTestDTO.getQuestion());
@@ -114,8 +116,8 @@ public class AdminController {
   }
 
   @PostMapping("/addADHDTest")
-  public ResponseEntity<AuxADHDTestDTO>
-  addADHDTest(@RequestBody AuxADHDTestDTO auxADHDTestDTO) {
+  public ResponseEntity<AuxTestDTO>
+  addADHDTest(@RequestBody AuxTestDTO auxADHDTestDTO) {
     ADHDTest adhdTest = new ADHDTest();
     adhdTest.setQuestion(auxADHDTestDTO.getQuestion());
     adhdTest.setOption1(auxADHDTestDTO.getOption1());
@@ -127,7 +129,7 @@ public class AdminController {
   }
 
   @PostMapping("/updateADHDTest")
-  public void updateADHDTest(@RequestBody AuxADHDTestDTO auxADHDTestDTO) {
+  public void updateADHDTest(@RequestBody AuxTestDTO auxADHDTestDTO) {
     ADHDTest adhdTest = new ADHDTest();
     adhdTest.setId(auxADHDTestDTO.getId());
     adhdTest.setQuestion(auxADHDTestDTO.getQuestion());
@@ -151,5 +153,48 @@ public class AdminController {
   @GetMapping("/getAllADHDTest")
   public List<ADHDTest> getAllADHDTest() {
     return adhdTestService.getADHDTestAll();
+  }
+
+  @GetMapping("/getAllSelfHelpVideos")
+  public List<SelfHelpVideos> getAllSelfHelpVideos() {
+    return selfHelpVideosService.getSelfHelpVideosAll();
+  }
+
+  @PostMapping("/addSelfHelpVideos")
+  public ResponseEntity<AuxSelfHelpVideosDTO>
+  addSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
+    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
+    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
+    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
+    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
+    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
+    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
+    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
+    selfHelpVideosService.addSelfHelpVideos(selfHelpVideos);
+    return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
+  }
+
+  @PostMapping("/updateSelfHelpVideos")
+  public void
+  updateSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
+    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
+    selfHelpVideos.setId(auxSelfHelpVideosDTO.getId());
+    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
+    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
+    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
+    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
+    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
+    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
+    selfHelpVideosService.updateSelfHelpVideos(selfHelpVideos);
+  }
+
+  @DeleteMapping("/deleteSelfHelpVideos/{id}")
+  public void deleteSelfHelpVideosById(@PathVariable("id") int id) {
+    selfHelpVideosService.deleteSelfHelpVideosById(id);
+  }
+
+  @DeleteMapping("/deleteAllSelfHelpVideos")
+  public void deleteAllSelfHelpVideos() {
+    selfHelpVideosService.deleteAllSelfHelpVideos();
   }
 }

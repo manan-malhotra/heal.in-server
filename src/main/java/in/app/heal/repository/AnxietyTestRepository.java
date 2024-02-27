@@ -17,6 +17,8 @@ public interface AnxietyTestRepository
   @Query(value = "DELETE FROM anxiety_test where id = ?1", nativeQuery = true)
   void deleteById(int id);
 
+  @Modifying
+  @Transactional
   @Query(value = "DELETE FROM anxiety_test", nativeQuery = true)
   void deleteAll();
 

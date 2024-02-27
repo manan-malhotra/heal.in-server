@@ -31,7 +31,7 @@ public class SelfHelpVideos {
 
   @Column(name = "author") private String author;
 
-  @Column(name = "added_date")
-  @Temporal(TemporalType.TIMESTAMP)
-  private java.util.Date added_date;
+  // @Column(name = "added_date")
+  // @Temporal(TemporalType.TIMESTAMP)
+  // private java.util.Date added_date;
 }
