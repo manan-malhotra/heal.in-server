@@ -1,23 +1,22 @@
 package in.app.heal.controller;
 
-import in.app.heal.aux.AuxJournalDTO;
-import in.app.heal.aux.AuxUserDTO;
-import in.app.heal.aux.LoginDTO;
+import in.app.heal.aux.*;
 import in.app.heal.entities.JournalEntry;
+import in.app.heal.entities.PublicQNA;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.JournalEntryService;
+import in.app.heal.service.PublicQNAService;
 import in.app.heal.service.UserCredentialsService;
 import in.app.heal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,6 +27,9 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserCredentialsService userCredentialsService;
+
+    @Autowired
+    private PublicQNAService publicQNAService;
 
     @Autowired
     private JournalEntryService journalEntryService;
@@ -65,7 +67,51 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping(path = "/addQuestion")
+    public ResponseEntity<?>  addPublicQuestion(@RequestBody AuxPublicQNADTO auxPublicQNADTO){
+        Optional<User> userFound = userService.findById(auxPublicQNADTO.getUserId());
+        if(userFound.isPresent()) {
+            User user = userFound.get();
+            PublicQNA newQuestion = new PublicQNA();
+            newQuestion.setUser_id(user);
+            newQuestion.setQuestion(auxPublicQNADTO.getQuestion());
+            newQuestion.setDescription(auxPublicQNADTO.getDescription());
+            newQuestion.setAdded_date(new Date());
+            publicQNAService.addQuestion(newQuestion);
+            return new ResponseEntity<PublicQNA>(newQuestion,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
+    @PutMapping(path = "/editQuestion")
+    public ResponseEntity<?>  editPublicQuestion(@RequestBody AuxPublicQNAEditDTO auxPublicQNAEditDTO){
+        System.out.println(auxPublicQNAEditDTO.getQuestionId());
+        Optional<PublicQNA> questionFound = publicQNAService.findById(auxPublicQNAEditDTO.getQuestionId());
+        if(questionFound.isPresent()){
+            PublicQNA question = questionFound.get();
+            question.setAdded_date(new Date());
+            question.setDescription(auxPublicQNAEditDTO.getDescription());
+            question.setQuestion(auxPublicQNAEditDTO.getQuestion());
+            publicQNAService.addQuestion(question);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
+    @DeleteMapping(path = "/deleteQuestion/{questionId}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Integer questionId){
+        Optional<PublicQNA> questionFound = publicQNAService.findById(questionId);
+        if(questionFound.isPresent()) {
+            publicQNAService.deleteById(questionId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(path = "/allQuestions")
+    public ResponseEntity<?> findAllPublicQuestions(){
+        Optional<List<PublicQNA>> allQuestions = publicQNAService.findAll();
+        return new ResponseEntity<Optional<List<PublicQNA>>>(allQuestions,HttpStatus.OK);
+    }
 
 }

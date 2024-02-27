@@ -1,5 +1,6 @@
 package in.app.heal.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class PublicQNA {
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "user_id",
               nullable = false)
+  @JsonIgnore
   private User user_id;
 
   @OneToMany(mappedBy = "public_qna_id", cascade = CascadeType.ALL,

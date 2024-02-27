@@ -22,4 +22,8 @@ public class UserService {
         Optional<User> user= repository.findByFirstName(firstName);
         return user;
     }
+
+    public Optional<User> findById(Integer userId){
+        return repository.findById(userId);
+    }
 }
