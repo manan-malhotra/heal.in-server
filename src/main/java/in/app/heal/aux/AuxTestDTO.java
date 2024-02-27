@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuxADHDTestDTO {
+public class AuxTestDTO {
   private Integer id;
   private String question;
   private String option1;
