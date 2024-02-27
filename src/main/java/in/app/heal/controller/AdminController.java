@@ -1,12 +1,15 @@
 package in.app.heal.controller;
 
+import in.app.heal.aux.AuxSelfHelpVideosDTO;
 import in.app.heal.aux.AuxTestDTO;
 import in.app.heal.entities.ADHDTest;
 import in.app.heal.entities.AnxietyTest;
 import in.app.heal.entities.DepressionTest;
+import in.app.heal.entities.SelfHelpVideos;
 import in.app.heal.service.ADHDTestService;
 import in.app.heal.service.AnxietyTestService;
 import in.app.heal.service.DepressionTestService;
+import in.app.heal.service.SelfHelpVideosService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ public class AdminController {
   @Autowired private AnxietyTestService anxietyTestService;
 
   @Autowired private ADHDTestService adhdTestService;
+
+  @Autowired private SelfHelpVideosService selfHelpVideosService;
 
   @PostMapping("/addDepressionTest")
   public ResponseEntity<AuxTestDTO>
@@ -148,5 +153,48 @@ public class AdminController {
   @GetMapping("/getAllADHDTest")
   public List<ADHDTest> getAllADHDTest() {
     return adhdTestService.getADHDTestAll();
+  }
+
+  @GetMapping("/getAllSelfHelpVideos")
+  public List<SelfHelpVideos> getAllSelfHelpVideos() {
+    return selfHelpVideosService.getSelfHelpVideosAll();
+  }
+
+  @PostMapping("/addSelfHelpVideos")
+  public ResponseEntity<AuxSelfHelpVideosDTO>
+  addSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
+    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
+    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
+    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
+    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
+    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
+    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
+    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
+    selfHelpVideosService.addSelfHelpVideos(selfHelpVideos);
+    return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
+  }
+
+  @PostMapping("/updateSelfHelpVideos")
+  public void
+  updateSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
+    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
+    selfHelpVideos.setId(auxSelfHelpVideosDTO.getId());
+    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
+    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
+    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
+    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
+    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
+    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
+    selfHelpVideosService.updateSelfHelpVideos(selfHelpVideos);
+  }
+
+  @DeleteMapping("/deleteSelfHelpVideos/{id}")
+  public void deleteSelfHelpVideosById(@PathVariable("id") int id) {
+    selfHelpVideosService.deleteSelfHelpVideosById(id);
+  }
+
+  @DeleteMapping("/deleteAllSelfHelpVideos")
+  public void deleteAllSelfHelpVideos() {
+    selfHelpVideosService.deleteAllSelfHelpVideos();
   }
 }
