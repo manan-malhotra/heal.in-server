@@ -15,14 +15,18 @@ public class UserService {
     repository.save(user);
     return user;
   }
+  
+    public Optional<User> fetchByName(String firstName){
+        Optional<User> user= repository.findByFirstName(firstName);
+        return user;
+    }
 
+    public Optional<User> findById(Integer userId){
+        return repository.findById(userId);
+    }
   public Optional<User> fetchById(int id) {
     Optional<User> user = repository.findById(id);
     return user;
   }
 
-  public Optional<User> fetchByName(String firstName) {
-    Optional<User> user = repository.findByFirstName(firstName);
-    return user;
-  }
 }
