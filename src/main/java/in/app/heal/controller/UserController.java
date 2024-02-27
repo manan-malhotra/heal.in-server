@@ -2,6 +2,7 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.aux.AuxUserDTO;
+import in.app.heal.aux.LoginDTO;
 import in.app.heal.entities.JournalEntry;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
@@ -37,6 +38,8 @@ public class UserController {
         newUser.setFirst_name(auxUserDTO.getFirstName());
         newUser.setLast_name(auxUserDTO.getLastName());
         newUser.setContact_number(auxUserDTO.getContact());
+        newUser.setAge(auxUserDTO.getAge());
+        newUser.setGender(auxUserDTO.getGender());
         newUser = userService.addUser(newUser);
         UserCredentials newUserCredentials = new UserCredentials();
         newUserCredentials.setEmail(auxUserDTO.getEmail());
@@ -46,6 +49,22 @@ public class UserController {
         userCredentialsService.addUser(newUserCredentials);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<?> registerUser(@RequestBody LoginDTO loginDTO){
+        Optional<UserCredentials> userCredentials = userCredentialsService.findByEmail(loginDTO.getEmail());
+        if(userCredentials.isPresent()){
+            UserCredentials userCredentialsfound = userCredentials.get();
+            String password = userCredentialsfound.getPassword();
+            if(password.equals(loginDTO.getPassword())){
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
     @PostMapping(path = "/journal")
     public ResponseEntity<?> addJournalEntry(@RequestBody AuxJournalDTO auxJournalDTO){

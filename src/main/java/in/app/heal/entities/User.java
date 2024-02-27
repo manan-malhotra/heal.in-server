@@ -30,8 +30,7 @@ public class User {
   @Column(name = "age", nullable = false) private Integer age;
 
   @Column(name = "gender", nullable = false)
-  @Enumerated(EnumType.STRING)
-  private Gender gender;
+  private String gender;
 
   @Column(name = "depression_test_score") private Integer depression_test_score;
 
@@ -64,4 +63,3 @@ public class User {
   private List<PublicQNA> publicQNA;
 }
 
-enum Gender { MALE, FEMALE }
