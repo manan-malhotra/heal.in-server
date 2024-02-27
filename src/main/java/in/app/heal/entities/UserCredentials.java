@@ -7,27 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="userCredentials")
+@Table(name = "userCredentials")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class UserCredentials {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @OneToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user_id;
+  @OneToOne()
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+  private User user_id;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+  @Column(name = "email", nullable = false) private String email;
 
-    @Column(name = "role", nullable = false)
-    private String role;
+  @Column(name = "role", nullable = false) private String role;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+  @Column(name = "password", nullable = false) private String password;
 }
