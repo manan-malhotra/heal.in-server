@@ -24,13 +24,12 @@ public class Comments {
               nullable = false)
   private User user_id;
 
-  @ManyToOne
-  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id",
-              nullable = false)
-  private Blogs blog_id;
-
   @Column(name = "comment", nullable = false) private String comment;
   @Column(name = "comment_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date comment_date;
+
+  @ManyToOne
+  @JoinColumn(name = "public_qna_id", referencedColumnName = "public_qna_id")
+  private PublicQNA public_qna_id;
 }

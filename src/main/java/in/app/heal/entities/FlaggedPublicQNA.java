@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "flagged_posts")
-public class FlaggedPosts {
+@Table(name = "flagged_public_qna")
+public class FlaggedPublicQNA {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
@@ -23,8 +23,8 @@ public class FlaggedPosts {
   private User user_id;
 
   @ManyToOne
-  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id")
-  private Blogs blog_id;
+  @JoinColumn(name = "public_qna_id", referencedColumnName = "public_qna_id")
+  private PublicQNA public_qna_id;
 
   @Column(name = "reason", nullable = false) private String reason;
 

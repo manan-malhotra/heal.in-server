@@ -41,5 +41,13 @@ public class User {
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
-  private List<FlaggedPosts> flaggedPosts;
+  private List<FlaggedPublicQNA> flaggedPublicQNA;
+
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
+             orphanRemoval = true)
+  private List<FlaggedBlogs> flaggedBlogs;
+
+  @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
+             orphanRemoval = true)
+  private List<PublicQNA> publicQNA;
 }
