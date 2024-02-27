@@ -66,21 +66,6 @@ public class UserController {
     }
 
 
-    @PostMapping(path = "/journal")
-    public ResponseEntity<?> addJournalEntry(@RequestBody AuxJournalDTO auxJournalDTO){
-        JournalEntry journalEntry = new JournalEntry();
-        journalEntry.setTitle(auxJournalDTO.getTitle());
-        journalEntry.setDescription(auxJournalDTO.getDescription());
-        journalEntry.setTags(auxJournalDTO.getTags());
-        journalEntry.setEntry_date(new Date());
-        Optional<User> user = userService.fetchByName(auxJournalDTO.getFirstName());
-        if(user.isPresent()) {
-            journalEntry.setUser_id(user.get());
-            journalEntryService.addJournalEntry(journalEntry);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+
 
 }

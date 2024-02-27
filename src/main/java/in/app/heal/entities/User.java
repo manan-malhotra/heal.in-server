@@ -1,5 +1,6 @@
 package in.app.heal.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.util.List;
@@ -40,6 +41,7 @@ public class User {
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<JournalEntry> journalEntries;
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,

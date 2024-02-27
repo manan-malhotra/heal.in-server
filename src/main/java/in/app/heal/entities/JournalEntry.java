@@ -1,5 +1,6 @@
 package in.app.heal.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class JournalEntry {
 
   @ManyToOne()
   @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+  @JsonIgnore
   private User user_id;
 
   @Column(name = "title", nullable = false)
