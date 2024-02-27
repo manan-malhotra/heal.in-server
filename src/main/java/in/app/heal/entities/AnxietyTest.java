@@ -18,18 +18,13 @@ public class AnxietyTest {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
+  @Column(name = "question") private String question;
 
-  @Column(name = "question_1") private String question1;
+  @Column(name = "option_1") private String option1;
 
-  @Column(name = "question_2") private String question2;
+  @Column(name = "option_2") private String option2;
 
-  @Column(name = "question_3") private String question3;
+  @Column(name = "option_3") private String option3;
 
-  @Column(name = "question_4") private String question4;
-
-  @Column(name = "question_5") private String question5;
-
-  @Column(name = "question_6") private String question6;
-
-  @Column(name = "question_7") private String question7;
+  @Column(name = "option_4") private String option4;
 }
