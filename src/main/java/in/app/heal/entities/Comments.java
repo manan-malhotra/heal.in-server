@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "comments")
@@ -25,8 +27,7 @@ public class Comments {
               nullable = false)
   private User user_id;
 
-  @Column(name = "comment", nullable = false)
-  private String comment;
+  @Column(name = "comment", nullable = false) private String comment;
 
   @Column(name = "comment_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
@@ -35,5 +36,6 @@ public class Comments {
   @ManyToOne
   @JoinColumn(name = "public_qna_id", referencedColumnName = "public_qna_id")
   @JsonIgnore
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private PublicQNA public_qna_id;
 }
