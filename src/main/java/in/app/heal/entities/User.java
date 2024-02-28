@@ -46,22 +46,27 @@ public class User {
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<Blogs> blogs;
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<Comments> comments;
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<FlaggedPublicQNA> flaggedPublicQNA;
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<FlaggedBlogs> flaggedBlogs;
 
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<PublicQNA> publicQNA;
 }
 

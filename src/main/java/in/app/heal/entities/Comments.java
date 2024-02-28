@@ -1,5 +1,6 @@
 package in.app.heal.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,12 +25,15 @@ public class Comments {
               nullable = false)
   private User user_id;
 
-  @Column(name = "comment", nullable = false) private String comment;
+  @Column(name = "comment", nullable = false)
+  private String comment;
+
   @Column(name = "comment_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date comment_date;
 
   @ManyToOne
   @JoinColumn(name = "public_qna_id", referencedColumnName = "public_qna_id")
+  @JsonIgnore
   private PublicQNA public_qna_id;
 }
