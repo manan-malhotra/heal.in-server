@@ -37,9 +37,11 @@ public class PublicQNA {
 
   @OneToMany(mappedBy = "public_qna_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<Comments> comments;
 
   @OneToMany(mappedBy = "public_qna_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+  @JsonIgnore
   private List<FlaggedPublicQNA> flaggedPublicQNA;
 }

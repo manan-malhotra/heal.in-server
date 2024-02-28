@@ -1,14 +1,8 @@
 package in.app.heal.controller;
 
 import in.app.heal.aux.*;
-import in.app.heal.entities.JournalEntry;
-import in.app.heal.entities.PublicQNA;
-import in.app.heal.entities.User;
-import in.app.heal.entities.UserCredentials;
-import in.app.heal.service.JournalEntryService;
-import in.app.heal.service.PublicQNAService;
-import in.app.heal.service.UserCredentialsService;
-import in.app.heal.service.UserService;
+import in.app.heal.entities.*;
+import in.app.heal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +21,13 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserCredentialsService userCredentialsService;
-
     @Autowired
     private PublicQNAService publicQNAService;
 
     @Autowired
     private JournalEntryService journalEntryService;
+    @Autowired
+    private CommentService commentService;
     @PostMapping(path="/register")
     public ResponseEntity<?> registerUser(@RequestBody AuxUserDTO auxUserDTO){
         User newUser = new User();
@@ -113,5 +108,55 @@ public class UserController {
         Optional<List<PublicQNA>> allQuestions = publicQNAService.findAll();
         return new ResponseEntity<Optional<List<PublicQNA>>>(allQuestions,HttpStatus.OK);
     }
+
+    @PostMapping(path = "/comment")
+    public ResponseEntity<?> addComment(@RequestBody AuxCommentDTO auxCommentDTO){
+        Optional<PublicQNA> questionFound = publicQNAService.findById(auxCommentDTO.getQuestionId());
+        Optional<User> userFound = userService.findById(auxCommentDTO.getUserId());
+        if(questionFound.isPresent() && userFound.isPresent()) {
+            Comments comment = new Comments();
+            comment.setComment(auxCommentDTO.getComment());
+            comment.setUser_id(userFound.get());
+            comment.setPublic_qna_id(questionFound.get());
+            comment.setComment_date(new Date());
+            commentService.addComment(comment);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PutMapping(path = "/editComment")
+    public ResponseEntity<?> editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO){
+        Optional<PublicQNA> questionFound = publicQNAService.findById(auxCommentEditDTO.getQuestionId());
+        Optional<User> userFound = userService.findById(auxCommentEditDTO.getUserId());
+        Optional<Comments> commentsFound = commentService.findById(auxCommentEditDTO.getCommentId());
+        if(questionFound.isPresent() && userFound.isPresent() && commentsFound.isPresent()) {
+            Comments comment = commentsFound.get();
+            comment.setComment(auxCommentEditDTO.getComment());
+            comment.setUser_id(userFound.get());
+            comment.setPublic_qna_id(questionFound.get());
+            comment.setComment_date(new Date());
+            commentService.addComment(comment);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping(path = "/deleteComment/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Integer commentId){
+        Optional<Comments> commentsFound = commentService.findById(commentId);
+        if(commentsFound.isPresent()){
+            Comments comment = commentsFound.get();
+            commentService.delete(comment);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(path = "/allComments/{questionId}")
+    public ResponseEntity<?> findAllComments(@PathVariable Integer questionId){
+        Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
+        return new ResponseEntity<Optional<List<Comments>>>(allComments,HttpStatus.OK);
+    }
+
 
 }
