@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuxPublicQNADTO {
-    private String question;
-    private String description;
-    private Integer userId;
+  private Integer id;
+  private String question;
+  private String description;
+  private Integer userId;
 }

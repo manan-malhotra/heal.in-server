@@ -28,7 +28,7 @@ public class FlaggedPublicQNA {
 
   @Column(name = "reason", nullable = false) private String reason;
 
-  @Column(name = "flagged_date", nullable = false)
+  @Column(name = "flagged_date", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date flagged_date;
 }
