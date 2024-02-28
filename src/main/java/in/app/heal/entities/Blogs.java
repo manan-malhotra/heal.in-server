@@ -1,6 +1,7 @@
 package in.app.heal.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class Blogs {
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "user_id",
               nullable = false)
+  @JsonIgnore
   private User user_id;
 
   @Column(name = "title", nullable = false) private String title;
@@ -36,5 +38,6 @@ public class Blogs {
 
   @OneToMany(mappedBy = "blog_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
+             @JsonIgnore
   private Set<FlaggedBlogs> flaggedBlogs = new HashSet<>();
 }
