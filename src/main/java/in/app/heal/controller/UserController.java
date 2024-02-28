@@ -6,6 +6,8 @@ import in.app.heal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +30,10 @@ public class UserController {
     private JournalEntryService journalEntryService;
     @Autowired
     private CommentService commentService;
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @PostMapping(path="/register")
     public ResponseEntity<?> registerUser(@RequestBody AuxUserDTO auxUserDTO){
         User newUser = new User();
-        System.out.println("TESTING");
         newUser.setFirst_name(auxUserDTO.getFirstName());
         newUser.setLast_name(auxUserDTO.getLastName());
         newUser.setContact_number(auxUserDTO.getContact());
@@ -41,7 +43,8 @@ public class UserController {
         UserCredentials newUserCredentials = new UserCredentials();
         newUserCredentials.setEmail(auxUserDTO.getEmail());
         newUserCredentials.setUser_id(newUser);
-        newUserCredentials.setPassword(auxUserDTO.getPassword()); // to be hashed
+        String hash = passwordEncoder.encode(auxUserDTO.getPassword());
+        newUserCredentials.setPassword(hash);
         newUserCredentials.setRole(auxUserDTO.getRole());
         userCredentialsService.addUser(newUserCredentials);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -53,7 +56,8 @@ public class UserController {
         if(userCredentials.isPresent()){
             UserCredentials userCredentialsfound = userCredentials.get();
             String password = userCredentialsfound.getPassword();
-            if(password.equals(loginDTO.getPassword())){
+            boolean match = passwordEncoder.matches( loginDTO.getPassword(),password);
+            if(match){
                 return new ResponseEntity<>(HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -80,7 +84,6 @@ public class UserController {
 
     @PutMapping(path = "/editQuestion")
     public ResponseEntity<?>  editPublicQuestion(@RequestBody AuxPublicQNAEditDTO auxPublicQNAEditDTO){
-        System.out.println(auxPublicQNAEditDTO.getQuestionId());
         Optional<PublicQNA> questionFound = publicQNAService.findById(auxPublicQNAEditDTO.getQuestionId());
         if(questionFound.isPresent()){
             PublicQNA question = questionFound.get();
