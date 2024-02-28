@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -33,6 +35,7 @@ public class PublicQNA {
   @JoinColumn(name = "user_id", referencedColumnName = "user_id",
               nullable = false)
   @JsonIgnore
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private User user_id;
 
   @OneToMany(mappedBy = "public_qna_id", cascade = CascadeType.ALL,
