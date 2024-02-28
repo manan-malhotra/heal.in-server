@@ -1,0 +1,81 @@
+package in.app.heal.controller;
+
+import in.app.heal.aux.AuxDoctorsDTO;
+import in.app.heal.entities.Doctors;
+import in.app.heal.entities.User;
+import in.app.heal.service.DoctorsService;
+import in.app.heal.service.UserService;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/doctors")
+public class DoctorController {
+
+  @Autowired private DoctorsService doctorsService;
+
+  @Autowired private UserService userService;
+
+  @PostMapping("/addDoctor")
+  public ResponseEntity<?> addDoctor(@RequestBody AuxDoctorsDTO auxDoctorDTO) {
+    Doctors doctor = new Doctors();
+    Optional<User> user = userService.findById(auxDoctorDTO.getUser_id());
+    if (user.isPresent()) {
+      doctor.setUser_id(user.get());
+    }
+    doctor.setSpecialization(auxDoctorDTO.getSpecialization());
+    doctor.setExperience(auxDoctorDTO.getExperience());
+    doctor.setDegree(auxDoctorDTO.getDegree());
+    doctor.setLicense_number(auxDoctorDTO.getLicense_number());
+    doctorsService.addDoctor(doctor);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/getAll")
+  public ResponseEntity<?> getDoctorsAll() {
+    List<Doctors> doctorList = doctorsService.getDoctorsAll();
+    return new ResponseEntity<>(doctorList, HttpStatus.OK);
+  }
+
+  @GetMapping("getDoctorById/{id}")
+  public ResponseEntity<?> getDoctorById(@PathVariable("id") int id) {
+    List<Doctors> doctor = doctorsService.getDoctorByUserId(id);
+    return new ResponseEntity<>(doctor, HttpStatus.OK);
+  }
+
+  @DeleteMapping("deleteDoctorById/{id}")
+  public ResponseEntity<?> deleteDoctor(@PathVariable("id") int id) {
+    doctorsService.deleteDoctor(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @DeleteMapping("deleteAll")
+  public ResponseEntity<?> deleteAll() {
+    doctorsService.deleteAll();
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PutMapping("updateDoctor")
+  public ResponseEntity<?>
+  updateDoctor(@RequestBody AuxDoctorsDTO auxDoctorDTO) {
+    Doctors doctor = new Doctors();
+    Optional<Doctors> doctorOptional =
+        doctorsService.getDoctorById(auxDoctorDTO.getDoctor_id());
+    doctor.setDoctor_id(auxDoctorDTO.getDoctor_id());
+    doctor.setDoctor_id(auxDoctorDTO.getDoctor_id());
+    Optional<User> user = userService.findById(auxDoctorDTO.getUser_id());
+    if (user.isPresent()) {
+      doctor.setUser_id(user.get());
+    }
+    doctor.setSpecialization(auxDoctorDTO.getSpecialization());
+    doctor.setExperience(auxDoctorDTO.getExperience());
+    doctor.setDegree(auxDoctorDTO.getDegree());
+    doctor.setLicense_number(auxDoctorDTO.getLicense_number());
+    doctorsService.updateDoctor(doctor);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+}

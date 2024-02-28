@@ -19,11 +19,13 @@ public class FlaggedBlogs {
   private Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id",
+              nullable = false)
   private User user_id;
 
   @ManyToOne
-  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id")
+  @JoinColumn(name = "blog_id", referencedColumnName = "blog_id",
+              nullable = false)
   private Blogs blog_id;
 
   @Column(name = "reason", nullable = false) private String reason;
