@@ -21,17 +21,16 @@ public class Doctors {
   private Integer doctor_id;
 
   @OneToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id",
+              nullable = false)
   private User user_id;
 
   @Column(name = "specialization", nullable = false)
   private String specialization;
 
-  @Column(name = "experience", nullable = false)
-  private String experience;
+  @Column(name = "experience", nullable = false) private Integer experience;
 
-  @Column(name = "degree", nullable = false)
-  private String degree;
+  @Column(name = "degree", nullable = false) private String degree;
 
   @Column(name = "license_number", nullable = false)
   private String license_number;

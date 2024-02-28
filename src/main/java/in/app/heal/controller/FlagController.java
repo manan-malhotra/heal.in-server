@@ -1,11 +1,16 @@
 package in.app.heal.controller;
 
 import in.app.heal.aux.AuxFlaggedBlogsDTO;
+import in.app.heal.aux.AuxFlaggedPublicQNADTO;
 import in.app.heal.entities.Blogs;
 import in.app.heal.entities.FlaggedBlogs;
+import in.app.heal.entities.FlaggedPublicQNA;
+import in.app.heal.entities.PublicQNA;
 import in.app.heal.entities.User;
 import in.app.heal.service.BlogsService;
 import in.app.heal.service.FlaggedBlogsService;
+import in.app.heal.service.FlaggedPublicQNAService;
+import in.app.heal.service.PublicQNAService;
 import in.app.heal.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +33,10 @@ public class FlagController {
   @Autowired private UserService userService;
 
   @Autowired private BlogsService blogsService;
+
+  @Autowired private PublicQNAService publicQNAService;
+
+  @Autowired private FlaggedPublicQNAService flaggedPublicQNAService;
 
   @PostMapping("/blogs/addFlaggedBlogs")
   public ResponseEntity<?>
@@ -48,10 +58,9 @@ public class FlagController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping("/blogs/delete")
-  public ResponseEntity<?>
-  deleteFlag(@RequestBody AuxFlaggedBlogsDTO auxFlaggedBlogsDTO) {
-    flaggedBlogsService.deleteFlaggedBlogsById(auxFlaggedBlogsDTO.getId());
+  @PostMapping("/blogs/deleteFlaggedBlogs/{id}")
+  public ResponseEntity<?> deleteFlag(@PathVariable("id") int id) {
+    flaggedBlogsService.deleteFlaggedBlogsById(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -60,13 +69,59 @@ public class FlagController {
     return flaggedBlogsService.getFlaggedBlogsAll();
   }
 
-  @GetMapping("/blogs/getFlaggedBlogsByBlogId")
-  public List<FlaggedBlogs> getFlaggedBlogsByBlogId(int blogId) {
+  @GetMapping("/blogs/getFlaggedBlogsByBlogId/{id}")
+  public List<FlaggedBlogs>
+  getFlaggedBlogsByBlogId(@PathVariable("id") int blogId) {
     return flaggedBlogsService.getFlaggedBlogsByBlogId(blogId);
   }
 
-  @GetMapping("/blogs/getFlaggedBlogsByUserId")
-  public List<FlaggedBlogs> getFlaggedBlogsByUserId(int userId) {
+  @GetMapping("/blogs/getFlaggedBlogsByUserId/{id}")
+  public List<FlaggedBlogs>
+  getFlaggedBlogsByUserId(@PathVariable("id") int userId) {
     return flaggedBlogsService.getFlaggedBlogsByUserId(userId);
+  }
+
+  @PostMapping("/publicQNA/addFlaggedPublicQNA")
+  public ResponseEntity<?>
+  addFlag(@RequestBody AuxFlaggedPublicQNADTO auxFlaggedPublicQNADTO) {
+    FlaggedPublicQNA flaggedPublicQNA = new FlaggedPublicQNA();
+    Optional<PublicQNA> publicQNA =
+        publicQNAService.findById(auxFlaggedPublicQNADTO.getPublic_qna_id());
+    if (publicQNA.isPresent()) {
+      flaggedPublicQNA.setPublic_qna_id(publicQNA.get());
+    }
+    Optional<User> user =
+        userService.fetchById(auxFlaggedPublicQNADTO.getUser_id());
+    if (user.isPresent()) {
+      flaggedPublicQNA.setUser_id(user.get());
+    }
+    flaggedPublicQNA.setReason(auxFlaggedPublicQNADTO.getReason());
+    flaggedPublicQNA.setFlagged_date(auxFlaggedPublicQNADTO.getFlagged_date());
+    flaggedPublicQNAService.addFlaggedPublicQNA(flaggedPublicQNA);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/publicQNA/deleteFlaggedPublicQNA/{id}")
+  public ResponseEntity<?>
+  deleteFlaggedPublicQNAById(@PathVariable("id") int id) {
+    flaggedPublicQNAService.deleteById(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/publicQNA/getAllFlaggedPublicQNA")
+  public List<FlaggedPublicQNA> getAllFlaggedPublicQNA() {
+    return flaggedPublicQNAService.findAll();
+  }
+
+  @GetMapping("/publicQNA/getFlaggedPublicQNAByPublicQNAId/{id}")
+  public List<FlaggedPublicQNA>
+  getFlaggedPublicQNAByPublicQNAId(@PathVariable("id") int publicQNAId) {
+    return flaggedPublicQNAService.getFlaggedByPublicQNAId(publicQNAId);
+  }
+
+  @GetMapping("/publicQNA/getFlaggedPublicQNAByUserId/{id}")
+  public List<FlaggedPublicQNA>
+  getFlaggedPublicQNAByUserId(@PathVariable("id") int userId) {
+    return flaggedPublicQNAService.getFlaggedByUserId(userId);
   }
 }
