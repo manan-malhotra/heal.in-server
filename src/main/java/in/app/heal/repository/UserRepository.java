@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.first_name = :first_name")
     Optional<User> findByFirstName(String first_name);
+
 }
