@@ -1,7 +1,6 @@
 package in.app.heal.controller;
 
 import in.app.heal.aux.AuxJournalDTO;
-import in.app.heal.aux.AuxJournalEditDTO;
 import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.entities.JournalEntry;
 import in.app.heal.entities.User;
@@ -50,8 +49,7 @@ public class JournalController {
         String token = "";
         if(!auth.isEmpty()){
             token = auth.split(" ")[1];
-        }
-        if(!token.isEmpty()){
+
             String secret = dotenv.get("SECRET_KEY");
             Key hmackey = new SecretKeySpec(Base64.getDecoder().decode(secret),
                     SignatureAlgorithm.HS256.getJcaName());
@@ -71,26 +69,18 @@ public class JournalController {
                 System.out.println(e);
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-
-        }
-//        userCredentialsService.findByEmail()
-//
-//        if(user.isPresent()) {
-//            journalEntry.setUser_id(user.get());
-//            journalEntryService.addJournalEntry(journalEntry);
-//
-//        }
-        else{
+        }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping(path = "/edit")
-    public ResponseEntity<?> editJournalEntry(@RequestBody AuxJournalEditDTO auxJournalEditDTO){
+    public ResponseEntity<?> editJournalEntry(@RequestBody AuxJournalDTO auxJournalEditDTO){
         Optional<JournalEntry> entryFound = journalEntryService.findByEntryId(auxJournalEditDTO.getEntryId());
         if(entryFound.isPresent()){
             JournalEntry entry = entryFound.get();
             entry.setDescription(auxJournalEditDTO.getDescription());
+            entry.setTitle(auxJournalEditDTO.getTitle());
             entry.setEntry_date(new Date());
             journalEntryService.addJournalEntry(entry);
             return new ResponseEntity<>(HttpStatus.OK);
