@@ -95,7 +95,7 @@ public class UserController {
         String jwtToken = Jwts.builder().signWith(SignatureAlgorithm.HS256,secret)
                 .claim("email",auxUserDTO.getEmail())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plus(5l, ChronoUnit.HOURS))).compact();
+                .setExpiration(Date.from(Instant.now().plus(30l, ChronoUnit.DAYS))).compact();
         return new ResponseEntity<String>(jwtToken,HttpStatus.OK);
     }
 
@@ -112,7 +112,7 @@ public class UserController {
                         .signWith(SignatureAlgorithm.HS256,secret)
                         .claim("email",loginDTO.getEmail())
                         .setIssuedAt(Date.from(Instant.now()))
-                        .setExpiration(Date.from(Instant.now().plus(5l,ChronoUnit.HOURS))).compact();
+                        .setExpiration(Date.from(Instant.now().plus(30l,ChronoUnit.DAYS))).compact();
                 return new ResponseEntity<String>(jwtToken,HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

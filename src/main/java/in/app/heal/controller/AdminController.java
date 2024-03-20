@@ -16,6 +16,8 @@ import in.app.heal.service.BlogsService;
 import in.app.heal.service.DepressionTestService;
 import in.app.heal.service.SelfHelpVideosService;
 import in.app.heal.service.UserService;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,7 +221,7 @@ public class AdminController {
     Blogs blogs = new Blogs();
     blogs.setTitle(auxBlogsDTO.getTitle());
     blogs.setDescription(auxBlogsDTO.getDescription());
-    blogs.setPost_date(auxBlogsDTO.getPost_date());
+    blogs.setPost_date(new Date());
     Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
     if (user.isPresent()) {
       blogs.setUser_id(user.get());

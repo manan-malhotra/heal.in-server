@@ -27,13 +27,12 @@ public class Blogs {
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "user_id",
               nullable = false)
-  @JsonIgnore
   @OnDelete(action = OnDeleteAction.CASCADE)
   private User user_id;
 
   @Column(name = "title", nullable = false) private String title;
 
-  @Column(name = "description", nullable = false) private String description;
+  @Column(name = "description", nullable = false, length = 3000) private String description;
 
   @Column(name = "post_date", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
