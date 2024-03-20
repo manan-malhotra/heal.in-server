@@ -13,10 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuxJournalDTO {
-
+    private Integer entryId;
     private String title;
     private String description;
-    private String tags;
-    private String firstName;
 
 }

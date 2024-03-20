@@ -31,11 +31,10 @@ public class JournalEntry {
 
   @Column(name = "title", nullable = false) private String title;
 
-  @Column(name = "description", nullable = false) private String description;
+  @Column(name = "description", nullable = false, length = 3000) private String description;
 
   @Column(name = "entry_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private java.util.Date entry_date;
 
-  @Column(name = "tags", nullable = false) private String tags;
 }
