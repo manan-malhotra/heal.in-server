@@ -66,6 +66,7 @@ public class UserController {
                 auxUserDTO.setContact(user.getContact_number());
                 auxUserDTO.setFirstName(user.getFirst_name());
                 auxUserDTO.setLastName(user.getLast_name());
+                auxUserDTO.setUserId(user.getUser_id());
                 return new ResponseEntity<AuxUserDTO>(auxUserDTO,HttpStatus.OK);
             }
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);

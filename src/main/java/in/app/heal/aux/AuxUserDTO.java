@@ -18,5 +18,6 @@ public class AuxUserDTO {
     private String password;
     private String role;
     private Long contact;
+    private Integer userId;
 
 }
