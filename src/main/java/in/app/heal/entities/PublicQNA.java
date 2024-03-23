@@ -34,7 +34,6 @@ public class PublicQNA {
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "user_id",
               nullable = false)
-  @JsonIgnore
   @OnDelete(action = OnDeleteAction.CASCADE)
   private User user_id;
 

@@ -12,6 +12,8 @@ import in.app.heal.service.FlaggedBlogsService;
 import in.app.heal.service.FlaggedPublicQNAService;
 import in.app.heal.service.PublicQNAService;
 import in.app.heal.service.UserService;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +98,7 @@ public class FlagController {
       flaggedPublicQNA.setUser_id(user.get());
     }
     flaggedPublicQNA.setReason(auxFlaggedPublicQNADTO.getReason());
-    flaggedPublicQNA.setFlagged_date(auxFlaggedPublicQNADTO.getFlagged_date());
+    flaggedPublicQNA.setFlagged_date(new Date());
     flaggedPublicQNAService.addFlaggedPublicQNA(flaggedPublicQNA);
     return new ResponseEntity<>(HttpStatus.OK);
   }
