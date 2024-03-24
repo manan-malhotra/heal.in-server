@@ -10,14 +10,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuxUserDTO {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private Integer age;
-    private String gender;
-    private String password;
-    private String role;
-    private Long contact;
-    private Integer userId;
-
+  private String firstName;
+  private String lastName;
+  private String email;
+  private Integer age;
+  private String gender;
+  private String password;
+  private String role;
+  private Long contact;
+  private Integer userId;
+  private Integer adhdTestScore;
+  private Integer depressionTestScore;
+  private Integer anxietyTestScore;
 }
