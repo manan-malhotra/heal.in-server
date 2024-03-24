@@ -71,6 +71,9 @@ public class UserController {
         auxUserDTO.setFirstName(user.getFirst_name());
         auxUserDTO.setLastName(user.getLast_name());
         auxUserDTO.setUserId(user.getUser_id());
+        auxUserDTO.setAdhdTestScore(user.getAdhd_test_score());
+        auxUserDTO.setAnxietyTestScore(user.getAnxiety_test_score());
+        auxUserDTO.setDepressionTestScore(user.getDepression_test_score());
         return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
       }
       return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
