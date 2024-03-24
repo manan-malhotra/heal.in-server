@@ -19,12 +19,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/flag")
@@ -60,7 +55,7 @@ public class FlagController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping("/blogs/deleteFlaggedBlogs/{id}")
+  @DeleteMapping("/blogs/deleteFlaggedBlogs/{id}")
   public ResponseEntity<?> deleteFlag(@PathVariable("id") int id) {
     flaggedBlogsService.deleteFlaggedBlogsById(id);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -103,7 +98,7 @@ public class FlagController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping("/publicQNA/deleteFlaggedPublicQNA/{id}")
+  @DeleteMapping("/publicQNA/deleteFlaggedPublicQNA/{id}")
   public ResponseEntity<?>
   deleteFlaggedPublicQNAById(@PathVariable("id") int id) {
     flaggedPublicQNAService.deleteById(id);
