@@ -15,6 +15,7 @@ import in.app.heal.service.UserService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,13 @@ public class FlagController {
     if (user.isPresent()) {
       flaggedBlogs.setUser_id(user.get());
     }
+    List<FlaggedBlogs> existingBlogs = flaggedBlogsService.getFlaggedBlogsByBlogId(blog.get().getBlog_id());
+    for (int i = 0; i < existingBlogs.size(); i++) {
+      if(Objects.equals(existingBlogs.get(i).getUser_id().getUser_id(), auxFlaggedBlogsDTO.getUser_id())){
+        return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+      }
+    }
+
     flaggedBlogs.setReason(auxFlaggedBlogsDTO.getReason());
     flaggedBlogs.setFlagged_date(new Date());
     flaggedBlogsService.addFlaggedBlogs(flaggedBlogs);
@@ -92,10 +100,18 @@ public class FlagController {
     if (user.isPresent()) {
       flaggedPublicQNA.setUser_id(user.get());
     }
+    List<FlaggedPublicQNA> existingQNA = flaggedPublicQNAService.getFlaggedByPublicQNAId(publicQNA.get().getPublic_qna_id());
+    for (int i = 0; i < existingQNA.size(); i++) {
+      if(Objects.equals(existingQNA.get(i).getUser_id().getUser_id(), auxFlaggedPublicQNADTO.getUser_id())){
+        System.out.println(existingQNA.get(i).getUser_id().getUser_id());
+        return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+      }
+    }
     flaggedPublicQNA.setReason(auxFlaggedPublicQNADTO.getReason());
     flaggedPublicQNA.setFlagged_date(new Date());
     flaggedPublicQNAService.addFlaggedPublicQNA(flaggedPublicQNA);
-    return new ResponseEntity<>(HttpStatus.OK);
+
+    return new ResponseEntity<List<FlaggedPublicQNA>>(existingQNA,HttpStatus.OK);
   }
 
   @DeleteMapping("/publicQNA/deleteFlaggedPublicQNA/{id}")
