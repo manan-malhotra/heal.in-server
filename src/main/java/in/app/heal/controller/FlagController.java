@@ -50,7 +50,7 @@ public class FlagController {
       flaggedBlogs.setUser_id(user.get());
     }
     flaggedBlogs.setReason(auxFlaggedBlogsDTO.getReason());
-    flaggedBlogs.setFlagged_date(auxFlaggedBlogsDTO.getFlagged_date());
+    flaggedBlogs.setFlagged_date(new Date());
     flaggedBlogsService.addFlaggedBlogs(flaggedBlogs);
     return new ResponseEntity<>(HttpStatus.OK);
   }
