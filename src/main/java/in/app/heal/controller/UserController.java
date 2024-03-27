@@ -129,6 +129,10 @@ public class UserController {
 
   @PostMapping(path = "/register")
   public ResponseEntity<?> registerUser(@RequestBody AuxUserDTO auxUserDTO) {
+    Optional<UserCredentials> alreadyExisting = userCredentialsService.findByEmail(auxUserDTO.getEmail());
+    if(alreadyExisting.isPresent()){
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
     User newUser = new User();
     newUser.setFirst_name(auxUserDTO.getFirstName());
     newUser.setLast_name(auxUserDTO.getLastName());

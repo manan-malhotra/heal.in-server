@@ -25,7 +25,7 @@ public class UserCredentials {
   @OnDelete(action = OnDeleteAction.CASCADE)
   private User user_id;
 
-  @Column(name = "email", nullable = false) private String email;
+  @Column(name = "email", nullable = false,unique = true) private String email;
 
   @Column(name = "role", nullable = false) private String role;
 
