@@ -10,6 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuxDoctorsDTO {
+  private String firstName;
+  private String lastName;
+  private String email;
+  private Integer age;
+  private String gender;
+  private String password;
+  private String role;
+  private Long contact;
   private Integer doctor_id;
   private Integer user_id;
   private String specialization;
