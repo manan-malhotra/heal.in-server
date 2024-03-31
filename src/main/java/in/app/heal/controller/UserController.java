@@ -183,6 +183,7 @@ public class UserController {
 
   @PostMapping(path = "/addQuestion")
   public ResponseEntity<?> addPublicQuestion(@RequestBody AuxPublicQNADTO auxPublicQNADTO) {
+
     Optional<User> userFound = userService.findById(auxPublicQNADTO.getUserId());
     if (userFound.isPresent()) {
       User user = userFound.get();

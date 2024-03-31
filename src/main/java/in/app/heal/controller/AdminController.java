@@ -1,9 +1,6 @@
 package in.app.heal.controller;
 
-import in.app.heal.aux.AuxBlogsDTO;
-import in.app.heal.aux.AuxSelfHelpVideosDTO;
-import in.app.heal.aux.AuxTestDTO;
-import in.app.heal.aux.AuxUserDTO;
+import in.app.heal.aux.*;
 import in.app.heal.entities.ADHDTest;
 import in.app.heal.entities.AnxietyTest;
 import in.app.heal.entities.Blogs;
@@ -211,9 +208,19 @@ public class AdminController {
   }
 
   @GetMapping("/getAllBlogs")
-  public List<Blogs> getAllBlogs() {
+  public List<AuxArticleDTO> getAllBlogs() {
     return blogsService.getBlogsAll();
   }
+
+  @GetMapping("/getBlog/{id}")
+  public ResponseEntity<?> getBlogById(@PathVariable("id") int id){
+    Optional<Blogs> blogsOptional = blogsService.getBlogsById(id);
+    if(blogsOptional.isPresent()){
+      return new ResponseEntity<Blogs>(blogsOptional.get(),HttpStatus.OK);
+    }else{
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  };
 
   @PostMapping("/addBlogs")
   public ResponseEntity<AuxBlogsDTO>

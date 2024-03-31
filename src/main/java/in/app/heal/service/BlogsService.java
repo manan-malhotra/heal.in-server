@@ -1,7 +1,10 @@
 package in.app.heal.service;
 
+import in.app.heal.aux.AuxArticleDTO;
 import in.app.heal.entities.Blogs;
 import in.app.heal.repository.BlogsRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,18 @@ public class BlogsService {
     return blogs;
   }
 
-  public List<Blogs> getBlogsAll() { return repository.findAll(); }
+  public List<AuxArticleDTO> getBlogsAll() {
+    List<Blogs> blogs =  repository.findAll();
+    List<AuxArticleDTO> allBlogs = new ArrayList<>();
+    for (int i = 0; i < blogs.size(); i++) {
+      AuxArticleDTO auxArticleDTO = new AuxArticleDTO();
+      auxArticleDTO.setId(blogs.get(i).getBlog_id());
+      auxArticleDTO.setTitle(blogs.get(i).getTitle());
+      auxArticleDTO.setPost_date(blogs.get(i).getPost_date());
+      allBlogs.add(0,auxArticleDTO);
+    }
+  return allBlogs;
+  }
 
   public Optional<Blogs> getBlogsById(int id) {
     return repository.findById(id);
