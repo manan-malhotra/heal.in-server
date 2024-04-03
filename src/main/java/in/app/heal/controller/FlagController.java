@@ -2,6 +2,7 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxFlaggedBlogsDTO;
 import in.app.heal.aux.AuxFlaggedPublicQNADTO;
+import in.app.heal.aux.FlagDTO;
 import in.app.heal.entities.Blogs;
 import in.app.heal.entities.FlaggedBlogs;
 import in.app.heal.entities.FlaggedPublicQNA;
@@ -13,10 +14,8 @@ import in.app.heal.service.FlaggedPublicQNAService;
 import in.app.heal.service.PublicQNAService;
 import in.app.heal.service.UserService;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +69,7 @@ public class FlagController {
   }
 
   @GetMapping("/blogs/getAllFlaggedBlogs")
-  public List<FlaggedBlogs> getAllFlaggedBlogs() {
+  public List<FlagDTO> getAllFlaggedBlogs() {
     return flaggedBlogsService.getFlaggedBlogsAll();
   }
 
@@ -122,7 +121,7 @@ public class FlagController {
   }
 
   @GetMapping("/publicQNA/getAllFlaggedPublicQNA")
-  public List<FlaggedPublicQNA> getAllFlaggedPublicQNA() {
+  public List<FlagDTO> getAllFlaggedPublicQNA() {
     return flaggedPublicQNAService.findAll();
   }
 
