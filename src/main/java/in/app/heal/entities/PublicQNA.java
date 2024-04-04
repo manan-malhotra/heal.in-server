@@ -25,7 +25,6 @@ public class PublicQNA {
 
   @Column(name = "question", nullable = false) private String question;
 
-  @Column(name = "description", nullable = false) private String description;
 
   @Column(name = "added_date", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)

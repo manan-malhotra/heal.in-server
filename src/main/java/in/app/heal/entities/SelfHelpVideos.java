@@ -22,16 +22,4 @@ public class SelfHelpVideos {
   @Column(name = "title") private String title;
 
   @Column(name = "url") private String url;
-
-  @Column(name = "description") private String description;
-
-  @Column(name = "category") private String category;
-
-  @Column(name = "tags") private String tags;
-
-  @Column(name = "author") private String author;
-
-  // @Column(name = "added_date")
-  // @Temporal(TemporalType.TIMESTAMP)
-  // private java.util.Date added_date;
 }

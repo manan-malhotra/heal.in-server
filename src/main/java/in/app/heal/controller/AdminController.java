@@ -44,11 +44,7 @@ public class AdminController {
   addSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
     SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
     selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
-    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
-    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
     selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
-    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
-    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
     selfHelpVideosService.addSelfHelpVideos(selfHelpVideos);
     return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
   }
@@ -59,11 +55,7 @@ public class AdminController {
     SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
     selfHelpVideos.setId(auxSelfHelpVideosDTO.getId());
     selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
-    selfHelpVideos.setDescription(auxSelfHelpVideosDTO.getDescription());
-    selfHelpVideos.setTags(auxSelfHelpVideosDTO.getTags());
     selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
-    selfHelpVideos.setCategory(auxSelfHelpVideosDTO.getCategory());
-    selfHelpVideos.setAuthor(auxSelfHelpVideosDTO.getAuthor());
     selfHelpVideosService.updateSelfHelpVideos(selfHelpVideos);
   }
 

@@ -143,7 +143,6 @@ public class UserController {
       PublicQNA newQuestion = new PublicQNA();
       newQuestion.setUser_id(user);
       newQuestion.setQuestion(auxPublicQNADTO.getQuestion());
-      newQuestion.setDescription(auxPublicQNADTO.getDescription());
       newQuestion.setAdded_date(new Date());
       publicQNAService.addQuestion(newQuestion);
       return new ResponseEntity<PublicQNA>(newQuestion, HttpStatus.OK);
@@ -157,7 +156,6 @@ public class UserController {
     if (questionFound.isPresent()) {
       PublicQNA question = questionFound.get();
       question.setAdded_date(new Date());
-      question.setDescription(auxPublicQNAEditDTO.getDescription());
       question.setQuestion(auxPublicQNAEditDTO.getQuestion());
       publicQNAService.addQuestion(question);
       return new ResponseEntity<>(HttpStatus.OK);
