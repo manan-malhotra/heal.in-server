@@ -5,7 +5,6 @@ import in.app.heal.entities.*;
 import in.app.heal.service.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
@@ -71,9 +70,6 @@ public class UserController {
         auxUserDTO.setFirstName(user.getFirst_name());
         auxUserDTO.setLastName(user.getLast_name());
         auxUserDTO.setUserId(user.getUser_id());
-        auxUserDTO.setAdhdTestScore(user.getAdhd_test_score());
-        auxUserDTO.setAnxietyTestScore(user.getAnxiety_test_score());
-        auxUserDTO.setDepressionTestScore(user.getDepression_test_score());
         return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
       }
       return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
@@ -83,49 +79,6 @@ public class UserController {
     }
   }
 
-  @PostMapping(path = "/addScore")
-  public ResponseEntity<?> addAdhdScore(@RequestBody AuxAddTestScore auxAddTestScore,
-      @RequestHeader(required = false) HttpHeaders headers) {
-    String auth = headers.get("authorization").toString();
-    String token = "";
-    if (!auth.isEmpty()) {
-      token = auth.split(" ")[1];
-
-      String secret = dotenv.get("SECRET_KEY");
-      Key hmackey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-          SignatureAlgorithm.HS256.getJcaName());
-      try {
-        Claims jwt = Jwts.parserBuilder()
-            .setSigningKey(hmackey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-        String email = (String) jwt.get("email");
-        Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);
-        if (userCredentialsOptional.isPresent()) {
-          UserCredentials userCredentials = userCredentialsOptional.get();
-          User user = userCredentials.getUser_id();
-          if (auxAddTestScore.getTest().equals("adhd")) {
-            user.setAdhd_test_score(auxAddTestScore.getScore());
-            userService.addUser(user);
-          } else if (auxAddTestScore.getTest().equals("depression")) {
-            user.setDepression_test_score(auxAddTestScore.getScore());
-            userService.addUser(user);
-          } else if (auxAddTestScore.getTest().equals("anxiety")) {
-            user.setAnxiety_test_score(auxAddTestScore.getScore());
-            userService.addUser(user);
-          }
-          return new ResponseEntity<String>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      } catch (Exception e) {
-        System.out.println(e);
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-      }
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-  }
 
   @PostMapping(path = "/register")
   public ResponseEntity<?> registerUser(@RequestBody AuxUserDTO auxUserDTO) {
@@ -275,8 +228,7 @@ public class UserController {
   }
 
   @GetMapping(path = "/allComments/{questionId}")
-  public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {
-    Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
+  public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
     return new ResponseEntity<Optional<List<Comments>>>(allComments,
         HttpStatus.OK);
   }

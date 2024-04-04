@@ -33,12 +33,6 @@ public class User {
   @Column(name = "gender", nullable = false)
   private String gender;
 
-  @Column(name = "depression_test_score") private Integer depression_test_score;
-
-  @Column(name = "anxiety_test_score") private Integer anxiety_test_score;
-
-  @Column(name = "adhd_test_score") private Integer adhd_test_score;
-
   @OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL,
              orphanRemoval = true)
   @JsonIgnore

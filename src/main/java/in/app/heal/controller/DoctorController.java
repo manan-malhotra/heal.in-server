@@ -115,7 +115,7 @@ public class DoctorController {
         doctorsService.getDoctorById(auxDoctorDTO.getDoctor_id());
     doctor.setDoctor_id(auxDoctorDTO.getDoctor_id());
     doctor.setDoctor_id(auxDoctorDTO.getDoctor_id());
-    Optional<User> user = userService.findById(auxDoctorDTO.getUser_id());
+    Optional<User> user = userService.fetchById(auxDoctorDTO.getUser_id());
     if (user.isPresent()) {
       doctor.setUser_id(user.get());
     }

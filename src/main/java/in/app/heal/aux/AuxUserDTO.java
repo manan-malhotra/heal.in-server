@@ -19,7 +19,4 @@ public class AuxUserDTO {
   private String role;
   private Long contact;
   private Integer userId;
-  private Integer adhdTestScore;
-  private Integer depressionTestScore;
-  private Integer anxietyTestScore;
 }
