@@ -25,7 +25,6 @@ public class TestQuestions {
     @ManyToOne()
     @JoinColumn(name = "test_id", referencedColumnName = "test_id",
             nullable = false)
-    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Tests test_id;
 
