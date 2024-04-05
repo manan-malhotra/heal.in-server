@@ -1,0 +1,21 @@
+package in.app.heal.aux;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class FlagDTO {
+    private int id;
+    private String author;
+    private String title;
+    private String description;
+    private int spamCount;
+    private int hateCount;
+    private int irrelevantCount;
+    private int otherCount;
+}

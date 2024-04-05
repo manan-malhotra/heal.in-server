@@ -1,5 +1,6 @@
 package in.app.heal.controller;
 
+import in.app.heal.aux.AuxArticleDTO;
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.entities.JournalEntry;
@@ -81,7 +82,6 @@ public class JournalController {
             JournalEntry entry = entryFound.get();
             entry.setDescription(auxJournalEditDTO.getDescription());
             entry.setTitle(auxJournalEditDTO.getTitle());
-            entry.setEntry_date(new Date());
             journalEntryService.addJournalEntry(entry);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -102,5 +102,14 @@ public class JournalController {
     public ResponseEntity<?> findAllJournalEntries(@PathVariable Integer userId){
         Optional<List<JournalEntry>> entriesFound = journalEntryService.findAllByUserId(userId);
         return new ResponseEntity<Optional<List<JournalEntry>>>(entriesFound,HttpStatus.OK);
+    }
+
+    @GetMapping(path ="findById/{entryId}")
+    public ResponseEntity<?> findEntryById(@PathVariable Integer entryId){
+        Optional<JournalEntry> entryFound = journalEntryService.findByEntryId(entryId);
+        if(entryFound.isPresent()){
+            return new ResponseEntity<JournalEntry>(entryFound.get(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

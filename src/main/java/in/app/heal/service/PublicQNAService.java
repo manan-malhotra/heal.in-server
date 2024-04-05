@@ -3,7 +3,6 @@ package in.app.heal.service;
 import in.app.heal.entities.PublicQNA;
 import in.app.heal.repository.PublicQNARepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
