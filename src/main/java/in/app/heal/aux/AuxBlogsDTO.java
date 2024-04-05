@@ -1,6 +1,5 @@
 package in.app.heal.aux;
 
-import in.app.heal.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
