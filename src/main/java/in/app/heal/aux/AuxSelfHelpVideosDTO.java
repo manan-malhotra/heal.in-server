@@ -12,9 +12,5 @@ import lombok.Setter;
 public class AuxSelfHelpVideosDTO {
   private Integer id;
   private String title;
-  private String description;
-  private String tags;
   private String url;
-  private String author;
-  private String category;
 }
