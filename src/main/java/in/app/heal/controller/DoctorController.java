@@ -1,26 +1,15 @@
 package in.app.heal.controller;
 
 import in.app.heal.aux.AuxDoctorsDTO;
-import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.entities.Doctors;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.DoctorsService;
-import in.app.heal.service.GenerateTokenService;
 import in.app.heal.service.UserCredentialsService;
 import in.app.heal.service.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import java.security.Key;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
 import java.util.List;
 import java.util.Optional;
-import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +23,6 @@ public class DoctorController {
 
   @Autowired private DoctorsService doctorsService;
   @Autowired private UserCredentialsService userCredentialsService;
-  @Autowired private GenerateTokenService generateTokenService;
   @Autowired private UserService userService;
   PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   Dotenv dotenv = Dotenv.load();
@@ -42,10 +30,6 @@ public class DoctorController {
   @PostMapping("/addDoctor")
   public ResponseEntity<?> addDoctor(@RequestBody AuxDoctorsDTO auxDoctorDTO) {
     Doctors doctor = new Doctors();
-    // Optional<User> user = userService.findById(auxDoctorDTO.getUser_id());
-    // if (user.isPresent()) {
-    // doctor.setUser_id(user.get());
-    // }
     Optional<UserCredentials> alreadyExisting =
         userCredentialsService.findByEmail(auxDoctorDTO.getEmail());
     if (alreadyExisting.isPresent()) {
@@ -65,11 +49,7 @@ public class DoctorController {
     newUserCredentials.setPassword(hash);
     newUserCredentials.setRole(auxDoctorDTO.getRole());
     userCredentialsService.addUser(newUserCredentials);
-    String secret = dotenv.get("SECRET_KEY");
-    String jwtToken =generateTokenService.generateToken(auxDoctorDTO.getEmail());
-
     doctor.setUser_id(newUserCredentials.getUser_id());
-
     doctor.setSpecialization(auxDoctorDTO.getSpecialization());
     doctor.setExperience(auxDoctorDTO.getExperience());
     doctor.setDegree(auxDoctorDTO.getDegree());
