@@ -1,5 +1,6 @@
 package in.app.heal.service;
 
+import in.app.heal.aux.AuxEmailDTO;
 import in.app.heal.aux.AuxTestQuestion;
 import in.app.heal.aux.AuxTestScoreDTO;
 import in.app.heal.entities.TestQuestions;
@@ -10,7 +11,6 @@ import in.app.heal.repository.TestQuestionsRepository;
 import in.app.heal.repository.TestScoresRepository;
 import in.app.heal.repository.TestsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +28,8 @@ public class TestService {
     TestQuestionsRepository testQuestionsRepository;
     @Autowired
     TestScoresRepository testScoresRepository;
+    @Autowired
+    EmailSenderService senderService;
     public Tests addTests(String testName){
         Tests test = new Tests();
         test.setTest_name(testName);
@@ -92,6 +94,45 @@ public class TestService {
         }
         return uniqueList;
     }
+
+    public String getEmail(AuxEmailDTO auxEmailDTO) {
+        double percent = ((double) auxEmailDTO.getAuxTestScoreDTO().getScore() / auxEmailDTO.getAuxTestScoreDTO().getTotal()) * 100;
+        String type = "";
+        String userName = auxEmailDTO.getUsername();
+        String testName = auxEmailDTO.getTestname();
+        if (percent < 20) {
+            type = "Minimal";
+        } else if (percent < 40) {
+            type = "Mild";
+        } else if (percent < 60) {
+            type = "Moderate";
+        } else if (percent < 80) {
+            type = "Moderately Severe";
+        } else if (percent < 100) {
+            type = "Severe";
+        }
+
+        String OverallPercent = String.format("%.2f", percent);
+
+        senderService.sendSimpleEmail("somg0703@gmail.com",
+                "Self Assessment Test Report",
+                "Hello," + userName + "\n\n" + "Based on your responses, you may have symptoms of "+ type + " " + testName + ". This result is not a diagnosis, please consult a doctor or therapist who can help you get a diagnosed or treated.\n\n" +
+                        "Overall Score:" + auxEmailDTO.getAuxTestScoreDTO().getScore()+"/"+auxEmailDTO.getAuxTestScoreDTO().getTotal()+ "\n" +
+                        "Overall Percentage Score :" + OverallPercent + "\n\n" +
+                        "Each of the option's scores are as follows:\n" +
+                        "Not at all = 0\n" +
+                        "Several days = 1\n" +
+                        "More than half the days = 2\n" +
+                        "Nearly every day = 3\n\n" +
+                        "Interpreting your Total Percentage Score:\n" +
+                        "0-20: Minimal " + testName + "\n" +
+                        "21-40: Mild " + testName + "\n" +
+                        "41-60: Moderate " + testName + "\n" +
+                        "61-80: Moderately severe " + testName + "\n" +
+                        "81-100: Severe " + testName + "\n");
+        return "";
+    }
+
     public List<TestScores> getAllScores(int userId){
         return testScoresRepository.getScores(userId);
     }

@@ -1,5 +1,6 @@
 package in.app.heal.controller;
 
+import in.app.heal.aux.AuxEmailDTO;
 import in.app.heal.aux.AuxTestDTO;
 import in.app.heal.aux.AuxTestQuestion;
 import in.app.heal.aux.AuxTestScoreDTO;
@@ -56,5 +57,9 @@ public class TestController {
     public ResponseEntity<?> getAllScores(@PathVariable int userId){
         return new ResponseEntity<>(service.getAllScores(userId),HttpStatus.OK);
 
+    }
+    @PostMapping(path = "/getEmail")
+    public String getEmail(@RequestBody AuxEmailDTO auxEmailDTO){
+        return service.getEmail(auxEmailDTO);
     }
 }
