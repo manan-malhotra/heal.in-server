@@ -6,6 +6,7 @@ import in.app.heal.entities.Doctors;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.DoctorsService;
+import in.app.heal.service.GenerateTokenService;
 import in.app.heal.service.UserCredentialsService;
 import in.app.heal.service.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -33,7 +34,7 @@ public class DoctorController {
 
   @Autowired private DoctorsService doctorsService;
   @Autowired private UserCredentialsService userCredentialsService;
-
+  @Autowired private GenerateTokenService generateTokenService;
   @Autowired private UserService userService;
   PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   Dotenv dotenv = Dotenv.load();
@@ -65,13 +66,7 @@ public class DoctorController {
     newUserCredentials.setRole(auxDoctorDTO.getRole());
     userCredentialsService.addUser(newUserCredentials);
     String secret = dotenv.get("SECRET_KEY");
-    String jwtToken =
-        Jwts.builder()
-            .signWith(SignatureAlgorithm.HS256, secret)
-            .claim("email", auxDoctorDTO.getEmail())
-            .setIssuedAt(Date.from(Instant.now()))
-            .setExpiration(Date.from(Instant.now().plus(30l, ChronoUnit.DAYS)))
-            .compact();
+    String jwtToken =generateTokenService.generateToken(auxDoctorDTO.getEmail());
 
     doctor.setUser_id(newUserCredentials.getUser_id());
 
