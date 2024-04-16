@@ -8,8 +8,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,8 @@ public class UserController {
   private UserCredentialsService userCredentialsService;
   @Autowired
   private PublicQNAService publicQNAService;
-
   @Autowired
-  private JournalEntryService journalEntryService;
+  private GenerateTokenService generateTokenService;
   @Autowired
   private CommentService commentService;
   PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -100,13 +97,7 @@ public class UserController {
     newUserCredentials.setPassword(hash);
     newUserCredentials.setRole(auxUserDTO.getRole());
     userCredentialsService.addUser(newUserCredentials);
-    String secret = dotenv.get("SECRET_KEY");
-    String jwtToken = Jwts.builder()
-        .signWith(SignatureAlgorithm.HS256, secret)
-        .claim("email", auxUserDTO.getEmail())
-        .setIssuedAt(Date.from(Instant.now()))
-        .setExpiration(Date.from(Instant.now().plus(30l, ChronoUnit.DAYS)))
-        .compact();
+      String jwtToken = generateTokenService.generateToken(auxUserDTO.getEmail());
     return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
   }
 
@@ -119,13 +110,7 @@ public class UserController {
       String password = userCredentialsfound.getPassword();
       boolean match = passwordEncoder.matches(loginDTO.getPassword(), password);
       if (match) {
-        String jwtToken = Jwts.builder()
-            .signWith(SignatureAlgorithm.HS256, secret)
-            .claim("email", loginDTO.getEmail())
-            .setIssuedAt(Date.from(Instant.now()))
-            .setExpiration(Date.from(
-                Instant.now().plus(30l, ChronoUnit.DAYS)))
-            .compact();
+        String jwtToken = generateTokenService.generateToken(loginDTO.getEmail());
         return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
       } else {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
