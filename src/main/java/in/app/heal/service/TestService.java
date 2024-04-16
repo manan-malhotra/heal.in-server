@@ -10,7 +10,8 @@ import in.app.heal.repository.TestQuestionsRepository;
 import in.app.heal.repository.TestScoresRepository;
 import in.app.heal.repository.TestsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class TestService {
     TestQuestionsRepository testQuestionsRepository;
     @Autowired
     TestScoresRepository testScoresRepository;
+    @Autowired
+    EmailSenderService senderService;
     public Tests addTests(String testName){
         Tests test = new Tests();
         test.setTest_name(testName);
@@ -91,6 +94,64 @@ public class TestService {
             }
         }
         return uniqueList;
+    }
+
+    public String getEmail(AuxTestScoreDTO auxTestScoreDTO) {
+        Optional<User> user = userService.fetchById(auxTestScoreDTO.getUserId());
+        if(user.isPresent()){
+            Optional<Tests> test = this.get(auxTestScoreDTO.getTestId());
+            if(test.isPresent()){
+                TestScores testScores = new TestScores();
+
+                testScores.setTest_id(test.get());
+                testScores.setUser_id(user.get());
+                testScores.setScore(auxTestScoreDTO.getScore());
+                testScores.setTotal(auxTestScoreDTO.getTotal());
+                testScores.setSubmitted_date(new Date());
+                List<String> testName = testsRepository.getTestName(auxTestScoreDTO.getTestId());
+
+                String userName = userService.findNameByID(auxTestScoreDTO.getUserId());
+                System.out.println("UserName: " + userName);
+                System.out.println("TestName: " + testName.get(0));
+
+                double percent = ((double) auxTestScoreDTO.getScore() / auxTestScoreDTO.getTotal()) * 100;
+                String type = "";
+
+                if (percent < 20) {
+                    type = "Minimal";
+                } else if (percent < 40) {
+                    type = "Mild";
+                } else if (percent < 60) {
+                    type = "Moderate";
+                } else if (percent < 80) {
+                    type = "Moderately Severe";
+                } else if (percent < 100) {
+                    type = "Severe";
+                }
+
+                String OverallPercent = String.format("%.2f", percent);
+
+                senderService.sendSimpleEmail("somg0703@gmail.com",
+                        "Self Assessment Test Report",
+                        "Hello," + userName + "\n\n" + "Based on your responses, you may have symptoms of "+ type + " " + testName.get(0) + ". This result is not a diagnosis, please consult a doctor or therapist who can help you get a diagnosed or treated.\n\n" +
+                                "Overall Score:" + auxTestScoreDTO.getScore()+"/"+auxTestScoreDTO.getTotal()+ "\n" +
+                                "Overall Percentage Score :" + OverallPercent + "\n\n" +
+                                "Each of the option's scores are as follows:\n" +
+                                "Not at all = 0\n" +
+                                "Several days = 1\n" +
+                                "More than half the days = 2\n" +
+                                "Nearly every day = 3\n\n" +
+                                "Interpreting your Total Percentage Score:\n" +
+                                "0-20: Minimal " + testName.get(0) + "\n" +
+                                "21-40: Mild " + testName.get(0) + "\n" +
+                                "41-60: Moderate " + testName.get(0) + "\n" +
+                                "61-80: Moderately severe " + testName.get(0) + "\n" +
+                                "81-100: Severe " + testName.get(0) + "\n");
+
+                return "";
+            }
+        }
+        return "";
     }
     public List<TestScores> getAllScores(int userId){
         return testScoresRepository.getScores(userId);

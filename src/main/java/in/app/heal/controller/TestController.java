@@ -57,4 +57,8 @@ public class TestController {
         return new ResponseEntity<>(service.getAllScores(userId),HttpStatus.OK);
 
     }
+    @PostMapping(path = "/getEmail")
+    public String getEmail(@RequestBody AuxTestScoreDTO auxTestScoreDTO){
+        return service.getEmail(auxTestScoreDTO);
+    }
 }

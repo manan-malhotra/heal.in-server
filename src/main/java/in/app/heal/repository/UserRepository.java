@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.first_name = :first_name")
     Optional<User> findByFirstName(String first_name);
 
+    @Query("SELECT u.first_name FROM User u WHERE u.user_id = :userID")
+    String findNameByID(int userID);
+
 }
