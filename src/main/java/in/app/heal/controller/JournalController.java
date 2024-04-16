@@ -7,6 +7,7 @@ import in.app.heal.entities.JournalEntry;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.JournalEntryService;
+import in.app.heal.service.TokenService;
 import in.app.heal.service.UserCredentialsService;
 import in.app.heal.service.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -32,7 +33,7 @@ import java.util.Optional;
 public class JournalController {
     Dotenv dotenv = Dotenv.load();
     @Autowired
-    private UserService userService;
+    private TokenService tokenService;
 
     @Autowired
     private UserCredentialsService userCredentialsService;
@@ -51,12 +52,8 @@ public class JournalController {
         if(!auth.isEmpty()){
             token = auth.split(" ")[1];
 
-            String secret = dotenv.get("SECRET_KEY");
-            Key hmackey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-                    SignatureAlgorithm.HS256.getJcaName());
             try{
-                Claims jwt = Jwts.parserBuilder().setSigningKey(hmackey).build().parseClaimsJws(token).getBody();
-                String email = (String) jwt.get("email");
+                String email = tokenService.getEmailFromToken(token);
                 Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);
                 if(userCredentialsOptional.isPresent()){
                     UserCredentials userCredentials = userCredentialsOptional.get();

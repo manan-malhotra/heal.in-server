@@ -30,7 +30,7 @@ public class UserController {
   @Autowired
   private PublicQNAService publicQNAService;
   @Autowired
-  private GenerateTokenService generateTokenService;
+  private TokenService tokenService;
   @Autowired
   private CommentService commentService;
   PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -44,16 +44,8 @@ public class UserController {
     if (!auth.isEmpty()) {
       token = auth.split(" ")[1];
     }
-    String secret = dotenv.get("SECRET_KEY");
-    Key hmackey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-        SignatureAlgorithm.HS256.getJcaName());
     try {
-      Claims jwt = Jwts.parserBuilder()
-          .setSigningKey(hmackey)
-          .build()
-          .parseClaimsJws(token)
-          .getBody();
-      String email = (String) jwt.get("email");
+      String email = tokenService.getEmailFromToken(token);
       Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);
       if (userCredentialsOptional.isPresent()) {
         UserCredentials userCredentials = userCredentialsOptional.get();
@@ -97,20 +89,19 @@ public class UserController {
     newUserCredentials.setPassword(hash);
     newUserCredentials.setRole(auxUserDTO.getRole());
     userCredentialsService.addUser(newUserCredentials);
-      String jwtToken = generateTokenService.generateToken(auxUserDTO.getEmail());
+      String jwtToken = tokenService.generateToken(auxUserDTO.getEmail());
     return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
   }
 
   @PostMapping(path = "/login")
   public ResponseEntity<?> registerUser(@RequestBody LoginDTO loginDTO) {
-    String secret = dotenv.get("SECRET_KEY");
     Optional<UserCredentials> userCredentials = userCredentialsService.findByEmail(loginDTO.getEmail());
     if (userCredentials.isPresent()) {
       UserCredentials userCredentialsfound = userCredentials.get();
       String password = userCredentialsfound.getPassword();
       boolean match = passwordEncoder.matches(loginDTO.getPassword(), password);
       if (match) {
-        String jwtToken = generateTokenService.generateToken(loginDTO.getEmail());
+        String jwtToken = tokenService.generateToken(loginDTO.getEmail());
         return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
       } else {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
