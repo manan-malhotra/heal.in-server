@@ -200,7 +200,11 @@ public class UserController {
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
-
+  @PutMapping(path = "/approve/{commentId}")
+  public ResponseEntity<?> approveComment(@PathVariable Integer commentId) {
+    commentService.approveComment(commentId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
   @GetMapping(path = "/allComments/{questionId}")
   public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
     return new ResponseEntity<Optional<List<Comments>>>(allComments,

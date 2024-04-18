@@ -28,4 +28,13 @@ public class CommentService {
     public Optional<List<Comments>> findAllByQuestionId(Integer questionId){
         return repository.findAllByPublicQnaId(questionId);
     }
+    
+    public void approveComment(Integer commentId){
+        Optional<Comments> commentsFound = repository.findById(commentId);
+        if(commentsFound.isPresent()){
+            Comments comment = commentsFound.get();
+            comment.setApproved(true);
+            repository.save(comment);
+        }
+    }
 }
