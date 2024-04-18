@@ -40,9 +40,9 @@ public class EmailSenderService {
         System.out.println("Type: "+ type);
         sendSimpleEmail(email,
                 "Self Assessment Test Report",
-                "Hello," + userName + "\n\n" + "Based on your responses, you may have symptoms of "+ type + " " + testName + ". This result is not a diagnosis, please consult a doctor or therapist who can help you get a diagnosed or treated.\n\n" +
-                        "Overall Score:" + auxEmailDTO.getAuxTestScoreDTO().getScore()+"/"+auxEmailDTO.getAuxTestScoreDTO().getTotal()+ "\n" +
-                        "Overall Percentage Score :" + OverallPercent + "\n\n" +
+                "Hello, " + userName + "\n\n" + "Based on your responses, you may have symptoms of "+ type + " " + testName + ". This result is not a diagnosis, please consult a doctor or therapist who can help you get a diagnosed or treated.\n\n" +
+                        "Overall Score: " + auxEmailDTO.getAuxTestScoreDTO().getScore()+"/"+auxEmailDTO.getAuxTestScoreDTO().getTotal()+ "\n" +
+                        "Overall Percentage Score: " + OverallPercent + "\n\n" +
                         "Each of the option's scores are as follows:\n" +
                         "Not at all = 0\n" +
                         "Several days = 1\n" +
