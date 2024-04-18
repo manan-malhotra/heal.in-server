@@ -38,4 +38,7 @@ public class Comments {
   @JsonIgnore
   @OnDelete(action = OnDeleteAction.CASCADE)
   private PublicQNA public_qna_id;
+
+  @Column(name="approved")
+  private boolean approved = false;
 }
