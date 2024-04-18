@@ -6,6 +6,7 @@ import in.app.heal.aux.AuxTestQuestion;
 import in.app.heal.aux.AuxTestScoreDTO;
 import in.app.heal.entities.TestQuestions;
 import in.app.heal.entities.Tests;
+import in.app.heal.service.EmailSenderService;
 import in.app.heal.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,10 @@ public class TestController {
 
     @Autowired
     TestService service;
+
+    @Autowired
+    EmailSenderService mailService;
+
     @PostMapping(path = "/add")
     public ResponseEntity<?>  addTest(@RequestBody AuxTestDTO auxTestDTO){
         service.addTests(auxTestDTO.getTestName());
@@ -60,6 +65,6 @@ public class TestController {
     }
     @PostMapping(path = "/getEmail")
     public String getEmail(@RequestBody AuxEmailDTO auxEmailDTO){
-        return service.getEmail(auxEmailDTO);
+        return mailService.getEmail(auxEmailDTO);
     }
 }

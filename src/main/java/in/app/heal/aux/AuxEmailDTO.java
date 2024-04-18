@@ -12,4 +12,7 @@ public class AuxEmailDTO {
     private AuxTestScoreDTO auxTestScoreDTO;
     private String username;
     private String testname;
+    private String email;
+    private String type;
+
 }
