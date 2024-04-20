@@ -68,47 +68,17 @@ public class UserController {
 
     @PostMapping(path = "/comment")
     public ResponseEntity < ? > addComment(@RequestBody AuxCommentDTO auxCommentDTO) {
-        Optional < PublicQNA > questionFound = publicQNAService.findById(auxCommentDTO.getQuestionId());
-        Optional < User > userFound = userService.findById(auxCommentDTO.getUserId());
-        if (questionFound.isPresent() && userFound.isPresent()) {
-            Comments comment = new Comments();
-            comment.setComment(auxCommentDTO.getComment());
-            comment.setUser_id(userFound.get());
-            comment.setPublic_qna_id(questionFound.get());
-            comment.setComment_date(new Date());
-            commentService.addComment(comment);
-            return new ResponseEntity < > (HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        return commentService.addComment(auxCommentDTO);
     }
 
     @PutMapping(path = "/editComment")
     public ResponseEntity < ? > editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO) {
-        Optional < PublicQNA > questionFound = publicQNAService.findById(auxCommentEditDTO.getQuestionId());
-        Optional < User > userFound = userService.findById(auxCommentEditDTO.getUserId());
-        Optional < Comments > commentsFound = commentService.findById(auxCommentEditDTO.getCommentId());
-        if (questionFound.isPresent() && userFound.isPresent() &&
-            commentsFound.isPresent()) {
-            Comments comment = commentsFound.get();
-            comment.setComment(auxCommentEditDTO.getComment());
-            comment.setUser_id(userFound.get());
-            comment.setPublic_qna_id(questionFound.get());
-            comment.setComment_date(new Date());
-            commentService.addComment(comment);
-            return new ResponseEntity < > (HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        return commentService.editComment(auxCommentEditDTO);
     }
 
     @DeleteMapping(path = "/deleteComment/{commentId}")
     public ResponseEntity < ? > deleteComment(@PathVariable Integer commentId) {
-        Optional < Comments > commentsFound = commentService.findById(commentId);
-        if (commentsFound.isPresent()) {
-            Comments comment = commentsFound.get();
-            commentService.delete(comment);
-            return new ResponseEntity < > (HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+      return commentService.deleteComment(commentId);    
     }
     @PutMapping(path = "/approve/{commentId}")
     public ResponseEntity < ? > approveComment(@PathVariable Integer commentId) {
