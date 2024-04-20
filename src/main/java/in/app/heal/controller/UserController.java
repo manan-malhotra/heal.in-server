@@ -86,7 +86,7 @@ public class UserController {
   }
 
   @PostMapping(path = "/login")
-  public ResponseEntity<?> registerUser(@RequestBody LoginDTO loginDTO) {
+  public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
     Optional<UserCredentials> userCredentials = userCredentialsService.findByEmail(loginDTO.getEmail());
     if (userCredentials.isPresent()) {
       UserCredentials userCredentialsfound = userCredentials.get();
@@ -198,8 +198,8 @@ public class UserController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
   @GetMapping(path = "/allComments/{questionId}")
-  public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
-    return new ResponseEntity<Optional<List<Comments>>>(allComments,
-        HttpStatus.OK);
+  public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {
+    Optional<List<Comments>> allComments = commentService.findAllByQuestionId(questionId);
+    return new ResponseEntity<Optional<List<Comments>>>(allComments,HttpStatus.OK);
   }
 }
