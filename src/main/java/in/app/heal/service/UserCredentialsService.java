@@ -4,6 +4,7 @@ import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.aux.LoginDTO;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
+import in.app.heal.error.ApiError;
 import in.app.heal.repository.UserCredentialsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +73,11 @@ public class UserCredentialsService {
     public ResponseEntity<?> registerUser(AuxUserDTO auxUserDTO) {
         Optional<UserCredentials> alreadyExisting = this.findByEmail(auxUserDTO.getEmail());
         if(alreadyExisting.isPresent()){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            System.out.println("User already exists");
+            ApiError apiError = new ApiError();
+            apiError.setMessage("User already exists");
+            apiError.setStatus(HttpStatus.CONFLICT);
+            return new ResponseEntity<Object>(apiError, HttpStatus.CONFLICT);
         }
         User user = userService.populateUser(auxUserDTO);
         UserCredentials newUserCredentials = new UserCredentials();
