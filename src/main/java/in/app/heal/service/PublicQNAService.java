@@ -59,4 +59,13 @@ public class PublicQNAService {
         }
         return new ResponseEntity < > (HttpStatus.NOT_FOUND);
     }
+
+    public ResponseEntity < ? > deletePublicQuestion(Integer questionId) {
+        Optional < PublicQNA > questionFound = this.findById(questionId);
+        if (questionFound.isPresent()) {
+            this.deleteById(questionId);
+            return new ResponseEntity < > (HttpStatus.OK);
+        }
+        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+    }
 }

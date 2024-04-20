@@ -57,20 +57,13 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/deleteQuestion/{questionId}")
-    public ResponseEntity < ? > deleteQuestion(@PathVariable Integer questionId) {
-        Optional < PublicQNA > questionFound = publicQNAService.findById(questionId);
-        if (questionFound.isPresent()) {
-            publicQNAService.deleteById(questionId);
-            return new ResponseEntity < > (HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+    public ResponseEntity < ? > deletePublicQuestion(@PathVariable Integer questionId) {
+        return publicQNAService.deletePublicQuestion(questionId);
     }
 
     @GetMapping(path = "/allQuestions")
     public ResponseEntity < ? > findAllPublicQuestions() {
-        Optional < List < PublicQNA >> allQuestions = publicQNAService.findAll();
-        return new ResponseEntity < Optional < List < PublicQNA >>> (allQuestions,
-            HttpStatus.OK);
+        return new ResponseEntity < Optional < List < PublicQNA >>> (publicQNAService.findAll(),HttpStatus.OK);
     }
 
     @PostMapping(path = "/comment")
