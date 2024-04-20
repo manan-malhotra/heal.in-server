@@ -41,26 +41,7 @@ public class UserController {
 
   @PostMapping(path = "/register")
   public ResponseEntity<?> registerUser(@RequestBody AuxUserDTO auxUserDTO) {
-    Optional<UserCredentials> alreadyExisting = userCredentialsService.findByEmail(auxUserDTO.getEmail());
-    if(alreadyExisting.isPresent()){
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-    User newUser = new User();
-    newUser.setFirst_name(auxUserDTO.getFirstName());
-    newUser.setLast_name(auxUserDTO.getLastName());
-    newUser.setContact_number(auxUserDTO.getContact());
-    newUser.setAge(auxUserDTO.getAge());
-    newUser.setGender(auxUserDTO.getGender());
-    newUser = userService.addUser(newUser);
-    UserCredentials newUserCredentials = new UserCredentials();
-    newUserCredentials.setEmail(auxUserDTO.getEmail());
-    newUserCredentials.setUser_id(newUser);
-    String hash = passwordEncoder.encode(auxUserDTO.getPassword());
-    newUserCredentials.setPassword(hash);
-    newUserCredentials.setRole(auxUserDTO.getRole());
-    userCredentialsService.addUser(newUserCredentials);
-      String jwtToken = tokenService.generateToken(auxUserDTO.getEmail());
-    return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
+    return userCredentialsService.registerUser(auxUserDTO);
   }
 
   @PostMapping(path = "/login")

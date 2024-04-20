@@ -18,6 +18,8 @@ public class UserCredentialsService {
     @Autowired
     private TokenService tokenService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private UserCredentialsRepository repository;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public void addUser(UserCredentials userCredentials){
@@ -44,27 +46,43 @@ public class UserCredentialsService {
     }
     public ResponseEntity<?> getProfileDetails(String auth){
         String token = tokenService.getToken(auth);
-    try {
-      String email = tokenService.getEmailFromToken(token);
-      Optional<UserCredentials> userCredentialsOptional = this.findByEmail(email);
-      if (userCredentialsOptional.isPresent()) {
-        UserCredentials userCredentials = userCredentialsOptional.get();
-        User user = userCredentials.getUser_id();
-        AuxUserDTO auxUserDTO = new AuxUserDTO();
-        auxUserDTO.setAge(user.getAge());
-        auxUserDTO.setGender(user.getGender());
-        auxUserDTO.setEmail(email);
-        auxUserDTO.setRole(userCredentials.getRole());
-        auxUserDTO.setContact(user.getContact_number());
-        auxUserDTO.setFirstName(user.getFirst_name());
-        auxUserDTO.setLastName(user.getLast_name());
-        auxUserDTO.setUserId(user.getUser_id());
-        return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
-      }
-      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-    } catch (Exception e) {
-      System.out.println(e);
-      return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        try {
+            String email = tokenService.getEmailFromToken(token);
+            Optional<UserCredentials> userCredentialsOptional = this.findByEmail(email);
+            if (userCredentialsOptional.isPresent()) {
+                UserCredentials userCredentials = userCredentialsOptional.get();
+                User user = userCredentials.getUser_id();
+                AuxUserDTO auxUserDTO = new AuxUserDTO();
+                auxUserDTO.setAge(user.getAge());
+                auxUserDTO.setGender(user.getGender());
+                auxUserDTO.setEmail(email);
+                auxUserDTO.setRole(userCredentials.getRole());
+                auxUserDTO.setContact(user.getContact_number());
+                auxUserDTO.setFirstName(user.getFirst_name());
+                auxUserDTO.setLastName(user.getLast_name());
+                auxUserDTO.setUserId(user.getUser_id());
+                return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        }
     }
+
+    public ResponseEntity<?> registerUser(AuxUserDTO auxUserDTO) {
+        Optional<UserCredentials> alreadyExisting = this.findByEmail(auxUserDTO.getEmail());
+        if(alreadyExisting.isPresent()){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        User user = userService.populateUser(auxUserDTO);
+        UserCredentials newUserCredentials = new UserCredentials();
+        newUserCredentials.setEmail(auxUserDTO.getEmail());
+        newUserCredentials.setUser_id(user);
+        String hash = passwordEncoder.encode(auxUserDTO.getPassword());
+        newUserCredentials.setPassword(hash);
+        newUserCredentials.setRole(auxUserDTO.getRole());
+        this.addUser(newUserCredentials);
+        String jwtToken = tokenService.generateToken(auxUserDTO.getEmail());
+        return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package in.app.heal.service;
 
+import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.entities.User;
 import in.app.heal.repository.UserRepository;
 import java.util.Optional;
@@ -28,5 +29,13 @@ public class UserService {
     Optional<User> user = repository.findById(id);
     return user;
   }
-
+  public User populateUser(AuxUserDTO auxUserDTO){
+    User user = new User();
+    user.setFirst_name(auxUserDTO.getFirstName());
+    user.setLast_name(auxUserDTO.getLastName());
+    user.setContact_number(auxUserDTO.getContact());
+    user.setAge(auxUserDTO.getAge());
+    user.setGender(auxUserDTO.getGender());
+    return this.addUser(user);
+  }
 }
