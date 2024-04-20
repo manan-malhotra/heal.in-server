@@ -4,12 +4,7 @@ import in.app.heal.aux.*;
 import in.app.heal.entities.*;
 import in.app.heal.service.*;
 import io.github.cdimascio.dotenv.Dotenv;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import java.security.Key;
 import java.util.*;
-import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,10 +35,7 @@ public class UserController {
   @GetMapping(path = "/getProfile")
   public ResponseEntity<?> getProfileDetails(@RequestHeader HttpHeaders headers) {
     String auth = headers.get("authorization").toString();
-    String token = "";
-    if (!auth.isEmpty()) {
-      token = auth.split(" ")[1];
-    }
+    String token = tokenService.getToken(auth);
     try {
       String email = tokenService.getEmailFromToken(token);
       Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);

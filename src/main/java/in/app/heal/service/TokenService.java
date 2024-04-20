@@ -8,6 +8,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import io.github.cdimascio.dotenv.Dotenv;
+
+import java.net.http.HttpHeaders;
 import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -33,5 +35,12 @@ public class TokenService {
           .parseClaimsJws(token)
           .getBody();
         return (String) jwt.get("email");
+    }
+    public String getToken(String auth) {
+        String token = "";
+        if (!auth.isEmpty()) {
+            token = auth.split(" ")[1];
+        }
+        return token;
     }
 }
