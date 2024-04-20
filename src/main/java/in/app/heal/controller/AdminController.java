@@ -7,7 +7,6 @@ import in.app.heal.entities.User;
 import in.app.heal.service.BlogsService;
 import in.app.heal.service.SelfHelpVideosService;
 import in.app.heal.service.UserService;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

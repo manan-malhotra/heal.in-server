@@ -13,9 +13,7 @@ import in.app.heal.service.FlaggedBlogsService;
 import in.app.heal.service.FlaggedPublicQNAService;
 import in.app.heal.service.PublicQNAService;
 import in.app.heal.service.UserService;
-
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

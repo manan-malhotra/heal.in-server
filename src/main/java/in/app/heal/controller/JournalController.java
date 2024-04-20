@@ -2,10 +2,7 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.entities.JournalEntry;
-import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.JournalEntryService;
-import in.app.heal.service.TokenService;
-import in.app.heal.service.UserCredentialsService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
