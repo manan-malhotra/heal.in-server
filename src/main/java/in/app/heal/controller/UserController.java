@@ -48,31 +48,12 @@ public class UserController {
 
     @PostMapping(path = "/addQuestion")
     public ResponseEntity < ? > addPublicQuestion(@RequestBody AuxPublicQNADTO auxPublicQNADTO) {
-
-        Optional < User > userFound = userService.findById(auxPublicQNADTO.getUserId());
-        if (userFound.isPresent()) {
-            User user = userFound.get();
-            PublicQNA newQuestion = new PublicQNA();
-            newQuestion.setUser_id(user);
-            newQuestion.setQuestion(auxPublicQNADTO.getQuestion());
-            newQuestion.setAdded_date(new Date());
-            publicQNAService.addQuestion(newQuestion);
-            return new ResponseEntity < PublicQNA > (newQuestion, HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+      return publicQNAService.addPublicQuestion(auxPublicQNADTO);
     }
 
     @PutMapping(path = "/editQuestion")
     public ResponseEntity < ? > editPublicQuestion(@RequestBody AuxPublicQNAEditDTO auxPublicQNAEditDTO) {
-        Optional < PublicQNA > questionFound = publicQNAService.findById(auxPublicQNAEditDTO.getQuestionId());
-        if (questionFound.isPresent()) {
-            PublicQNA question = questionFound.get();
-            question.setAdded_date(new Date());
-            question.setQuestion(auxPublicQNAEditDTO.getQuestion());
-            publicQNAService.addQuestion(question);
-            return new ResponseEntity < > (HttpStatus.OK);
-        }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        return publicQNAService.editPublicQuestion(auxPublicQNAEditDTO);
     }
 
     @DeleteMapping(path = "/deleteQuestion/{questionId}")
