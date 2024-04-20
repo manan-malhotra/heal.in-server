@@ -1,6 +1,8 @@
 package in.app.heal.service;
 
+import in.app.heal.aux.AuxUserDTO;
 import in.app.heal.aux.LoginDTO;
+import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.repository.UserCredentialsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,29 @@ public class UserCredentialsService {
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    public ResponseEntity<?> getProfileDetails(String auth){
+        String token = tokenService.getToken(auth);
+    try {
+      String email = tokenService.getEmailFromToken(token);
+      Optional<UserCredentials> userCredentialsOptional = this.findByEmail(email);
+      if (userCredentialsOptional.isPresent()) {
+        UserCredentials userCredentials = userCredentialsOptional.get();
+        User user = userCredentials.getUser_id();
+        AuxUserDTO auxUserDTO = new AuxUserDTO();
+        auxUserDTO.setAge(user.getAge());
+        auxUserDTO.setGender(user.getGender());
+        auxUserDTO.setEmail(email);
+        auxUserDTO.setRole(userCredentials.getRole());
+        auxUserDTO.setContact(user.getContact_number());
+        auxUserDTO.setFirstName(user.getFirst_name());
+        auxUserDTO.setLastName(user.getLast_name());
+        auxUserDTO.setUserId(user.getUser_id());
+        return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
+      }
+      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+      System.out.println(e);
+      return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+    }
+    }
 }

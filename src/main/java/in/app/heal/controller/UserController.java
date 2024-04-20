@@ -35,29 +35,7 @@ public class UserController {
   @GetMapping(path = "/getProfile")
   public ResponseEntity<?> getProfileDetails(@RequestHeader HttpHeaders headers) {
     String auth = headers.get("authorization").toString();
-    String token = tokenService.getToken(auth);
-    try {
-      String email = tokenService.getEmailFromToken(token);
-      Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);
-      if (userCredentialsOptional.isPresent()) {
-        UserCredentials userCredentials = userCredentialsOptional.get();
-        User user = userCredentials.getUser_id();
-        AuxUserDTO auxUserDTO = new AuxUserDTO();
-        auxUserDTO.setAge(user.getAge());
-        auxUserDTO.setGender(user.getGender());
-        auxUserDTO.setEmail(email);
-        auxUserDTO.setRole(userCredentials.getRole());
-        auxUserDTO.setContact(user.getContact_number());
-        auxUserDTO.setFirstName(user.getFirst_name());
-        auxUserDTO.setLastName(user.getLast_name());
-        auxUserDTO.setUserId(user.getUser_id());
-        return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
-      }
-      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-    } catch (Exception e) {
-      System.out.println(e);
-      return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-    }
+    return userCredentialsService.getProfileDetails(auth);
   }
 
 
