@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private UserCredentialsService userCredentialsService;
     @Autowired
     private PublicQNAService publicQNAService;

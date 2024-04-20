@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +23,7 @@ public class CommentService {
     private UserService userService;
     @Autowired
     private PublicQNAService publicQNAService;
+
     public void addComment(Comments comment){
         repository.save(comment);
     }
@@ -46,6 +46,7 @@ public class CommentService {
     public Optional<Comments> findById(Integer commentId){
         return repository.findById(commentId);
     }
+
     public void delete(Comments comments){
         repository.delete(comments);
     }
