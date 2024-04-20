@@ -87,19 +87,7 @@ public class UserController {
 
   @PostMapping(path = "/login")
   public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
-    Optional<UserCredentials> userCredentials = userCredentialsService.findByEmail(loginDTO.getEmail());
-    if (userCredentials.isPresent()) {
-      UserCredentials userCredentialsfound = userCredentials.get();
-      String password = userCredentialsfound.getPassword();
-      boolean match = passwordEncoder.matches(loginDTO.getPassword(), password);
-      if (match) {
-        String jwtToken = tokenService.generateToken(loginDTO.getEmail());
-        return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
-      } else {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-      }
-    }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    return userCredentialsService.loginUser(loginDTO);
   }
 
   @PostMapping(path = "/addQuestion")
