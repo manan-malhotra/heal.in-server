@@ -48,10 +48,8 @@ public class JournalController {
         journalEntry.setDescription(auxJournalDTO.getDescription());
         journalEntry.setEntry_date(new Date());
         String auth = headers.get("authorization").toString();
-        String token = "";
-        if(!auth.isEmpty()){
-            token = auth.split(" ")[1];
-
+        String token = tokenService.getToken(auth);
+        if(!token.isEmpty()){
             try{
                 String email = tokenService.getEmailFromToken(token);
                 Optional<UserCredentials> userCredentialsOptional = userCredentialsService.findByEmail(email);
