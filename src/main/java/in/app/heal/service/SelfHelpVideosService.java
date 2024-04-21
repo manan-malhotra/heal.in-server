@@ -21,14 +21,14 @@ public class SelfHelpVideosService {
     selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
     selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
     try {
-      repository.save(selfHelpVideos);
+      return new ResponseEntity<>(repository.save(selfHelpVideos),
+                                  HttpStatus.OK);
     } catch (Exception e) {
       ApiError apiError = new ApiError();
       apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
       apiError.setMessage(e.getMessage());
       return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
   }
 
   public List<SelfHelpVideos> getSelfHelpVideosAll() {
@@ -41,13 +41,13 @@ public class SelfHelpVideosService {
 
   public ResponseEntity<?> deleteSelfHelpVideosById(int id) {
     ApiError apiError = new ApiError();
-    if (repository.findById(id) == null) {
+    if (repository.deleteById(id) == 1) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
       apiError.setStatus(HttpStatus.NOT_FOUND);
       apiError.setMessage("Video not found");
       return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
-    repository.deleteById(id);
-    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   public ResponseEntity<?> deleteAllSelfHelpVideos() {
@@ -62,13 +62,21 @@ public class SelfHelpVideosService {
     selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
     selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
     try {
-      repository.save(selfHelpVideos);
+      if (repository.updateById(selfHelpVideos.getTitle(),
+                                selfHelpVideos.getUrl(),
+                                selfHelpVideos.getId()) == 1) {
+        return new ResponseEntity<>(selfHelpVideos, HttpStatus.OK);
+      } else {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Video not found");
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      }
     } catch (Exception e) {
       ApiError apiError = new ApiError();
       apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
       apiError.setMessage(e.getMessage());
       return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
   }
 }
