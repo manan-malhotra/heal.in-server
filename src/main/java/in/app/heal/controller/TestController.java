@@ -26,8 +26,7 @@ public class TestController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<?>  addTest(@RequestBody AuxTestDTO auxTestDTO){
-        service.addTests(auxTestDTO.getTestName());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return service.addTests(auxTestDTO.getTestName());
     }
 
     @GetMapping(path="/getAll")
