@@ -66,12 +66,7 @@ public class AdminController {
 
   @GetMapping("/getBlog/{id}")
   public ResponseEntity<?> getBlogById(@PathVariable("id") int id) {
-    Optional<Blogs> blogsOptional = blogsService.getBlogsById(id);
-    if (blogsOptional.isPresent()) {
-      return new ResponseEntity<Blogs>(blogsOptional.get(), HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return blogsService.getBlog(id);
   };
 
   @PostMapping("/addBlogs")

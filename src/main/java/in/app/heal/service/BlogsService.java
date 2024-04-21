@@ -60,7 +60,21 @@ public class BlogsService {
   }
 
   public Optional<Blogs> getBlogsById(int id) {
+    Optional<Blogs> blog = repository.findById(id);
+
     return repository.findById(id);
+  }
+
+  public ResponseEntity<?> getBlog(int id) {
+    Optional<Blogs> blog = repository.findById(id);
+    if (blog.isPresent()) {
+      return new ResponseEntity<Blogs>(blog.get(), HttpStatus.OK);
+    } else {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setMessage("Blog not found");
+      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
   }
 
   public Optional<Blogs> fetchById(int id) {
