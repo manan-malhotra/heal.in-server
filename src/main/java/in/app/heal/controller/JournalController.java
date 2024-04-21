@@ -2,6 +2,7 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.entities.JournalEntry;
+import in.app.heal.error.ApiError;
 import in.app.heal.service.JournalEntryService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,10 @@ public class JournalController {
             journalEntryService.ediJournalEntry(entryFound.get(), auxJournalEditDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping(path = "/delete/{entryId}")
@@ -42,7 +46,10 @@ public class JournalController {
             journalEntryService.deleteById(entryId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(path = "/findAll/{userId}")
@@ -57,6 +64,9 @@ public class JournalController {
         if(entryFound.isPresent()){
             return new ResponseEntity<JournalEntry>(entryFound.get(),HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 }

@@ -3,6 +3,7 @@ package in.app.heal.service;
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.entities.JournalEntry;
 import in.app.heal.entities.UserCredentials;
+import in.app.heal.error.ApiError;
 import in.app.heal.repository.JournalEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,13 +34,21 @@ public class JournalEntryService {
                     this.addJournalEntry(journalEntry);
                     return new ResponseEntity<JournalEntry>(journalEntry,HttpStatus.OK);
                 }
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                ApiError apiError = new ApiError();
+                apiError.setMessage("User not found");
+                apiError.setStatus(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(apiError,HttpStatus.NOT_FOUND);
             }catch (Exception e){
-                System.out.println(e);
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                ApiError apiError = new ApiError();
+                apiError.setMessage("Unauthorized Access");
+                apiError.setStatus(HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Object>(apiError,HttpStatus.UNAUTHORIZED);
             }
         }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            ApiError apiError = new ApiError();
+            apiError.setMessage("Token Missing");
+            apiError.setStatus(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     public void addJournalEntry(JournalEntry journalEntry){
