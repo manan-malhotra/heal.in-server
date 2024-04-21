@@ -31,6 +31,12 @@ public class FlaggedBlogsService {
         blogsService.getBlogsById(auxFlaggedBlogsDTO.getBlog_id());
     if (blog.isPresent()) {
       flaggedBlogs.setBlog_id(blog.get());
+
+    } else {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setMessage("Blog not found");
+      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
     Optional<User> user =
         userService.fetchById(auxFlaggedBlogsDTO.getUser_id());
