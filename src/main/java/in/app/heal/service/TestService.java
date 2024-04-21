@@ -6,10 +6,13 @@ import in.app.heal.entities.TestQuestions;
 import in.app.heal.entities.TestScores;
 import in.app.heal.entities.Tests;
 import in.app.heal.entities.User;
+import in.app.heal.error.ApiError;
 import in.app.heal.repository.TestQuestionsRepository;
 import in.app.heal.repository.TestScoresRepository;
 import in.app.heal.repository.TestsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,10 +32,23 @@ public class TestService {
     TestScoresRepository testScoresRepository;
     @Autowired
     EmailSenderService senderService;
-    public Tests addTests(String testName){
+    public ResponseEntity<?> addTests(String testName){
+        if(testName == null || testName.isEmpty()){
+            ApiError apiError = new ApiError();
+            apiError.setStatus(HttpStatus.BAD_REQUEST);
+            apiError.setMessage("Test name cannot be null");
+            return new ResponseEntity<Object>(apiError,HttpStatus.BAD_REQUEST); 
+        }
+        Optional<Tests> testOptional = testsRepository.findByTestName(testName);
+        if(testOptional.isPresent()){
+            ApiError apiError = new ApiError();
+            apiError.setStatus(HttpStatus.CONFLICT);
+            apiError.setMessage(testName+"Test already exists");
+            return new ResponseEntity<Object>(apiError,HttpStatus.CONFLICT);
+        }
         Tests test = new Tests();
         test.setTest_name(testName);
-        return testsRepository.save(test);
+        return new ResponseEntity<>(testsRepository.save(test),HttpStatus.OK);        
     }
 
     public List<Tests> getAll(){
