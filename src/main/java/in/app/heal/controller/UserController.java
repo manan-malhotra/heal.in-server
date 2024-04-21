@@ -26,9 +26,11 @@ public class UserController {
   Dotenv dotenv = Dotenv.load();
 
   @GetMapping(path = "/getProfile")
-  public ResponseEntity<?>
-  getProfileDetails(@RequestHeader HttpHeaders headers) {
-    String auth = headers.get("authorization").toString();
+  public ResponseEntity<?> getProfileDetails(@RequestHeader HttpHeaders headers) {
+    String auth = "";
+    if(headers.get("authorization") != null) {
+      auth = headers.get("authorization").toString();
+    }
     return userCredentialsService.getProfileDetails(auth);
   }
 

@@ -10,6 +10,8 @@ import in.app.heal.error.ApiError;
 import in.app.heal.repository.UserCredentialsRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
+import org.springframework.http.HttpHeaders;
 import java.util.Optional;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,12 @@ public class UserCredentialsService {
   }
 
   public ResponseEntity<?> loginUser(LoginDTO loginDTO) {
+    if(loginDTO.getEmail()== null || loginDTO.getEmail().isEmpty() || loginDTO.getPassword()== null ||  loginDTO.getPassword().isEmpty()){
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.BAD_REQUEST);
+      apiError.setMessage("Missing credentials");
+      return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
     Optional<UserCredentials> userCredentials =
         this.findByEmail(loginDTO.getEmail());
     if (userCredentials.isPresent()) {
@@ -47,15 +55,29 @@ public class UserCredentialsService {
       boolean match = passwordEncoder.matches(loginDTO.getPassword(), password);
       if (match) {
         String jwtToken = tokenService.generateToken(loginDTO.getEmail());
-        return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + jwtToken);
+        return new ResponseEntity<>(headers, HttpStatus.OK);
       } else {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        ApiError apiError = new ApiError();
+        apiError.setMessage("Incorrect password");
+        apiError.setStatus(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
       }
     }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    ApiError apiError = new ApiError();
+    apiError.setMessage("User does not exist");
+    apiError.setStatus(HttpStatus.CONFLICT);
+    return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
   }
   public ResponseEntity<?> getProfileDetails(String auth) {
     String token = tokenService.getToken(auth);
+    if (token.isEmpty()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.UNAUTHORIZED);
+      apiError.setMessage("Missing token");
+      return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
+    }
     try {
       String email = tokenService.getEmailFromToken(token);
       Optional<UserCredentials> userCredentialsOptional =
@@ -74,13 +96,32 @@ public class UserCredentialsService {
         auxUserDTO.setUserId(user.getUser_id());
         return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
       }
-      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     } catch (Exception e) {
-      return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      apiError.setMessage(e.getMessage());
+      return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   public ResponseEntity<?> registerUser(AuxUserDTO auxUserDTO) {
+    if(auxUserDTO.getFirstName()== null || auxUserDTO.getFirstName().isEmpty() || 
+      auxUserDTO.getLastName()== null || auxUserDTO.getLastName().isEmpty() ||
+      auxUserDTO.getEmail()== null || auxUserDTO.getEmail().isEmpty() || 
+      auxUserDTO.getPassword()== null ||  auxUserDTO.getPassword().isEmpty() || 
+      auxUserDTO.getAge()== null || auxUserDTO.getAge().equals(0) ||
+      auxUserDTO.getContact()== null || auxUserDTO.getContact().equals(0) ||
+      auxUserDTO.getGender()== null || auxUserDTO.getEmail().isEmpty() 
+      ){
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.BAD_REQUEST);
+      apiError.setMessage("Missing credentials");
+      return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
     Optional<UserCredentials> alreadyExisting =
         this.findByEmail(auxUserDTO.getEmail());
     if (alreadyExisting.isPresent()) {
@@ -99,7 +140,9 @@ public class UserCredentialsService {
     newUserCredentials.setRole(auxUserDTO.getRole());
     this.addUser(newUserCredentials);
     String jwtToken = tokenService.generateToken(auxUserDTO.getEmail());
-    return new ResponseEntity<String>(jwtToken, HttpStatus.OK);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Bearer " + jwtToken);
+    return new ResponseEntity<>(headers, HttpStatus.OK);
   }
 
   public void sendEmail(String email, String subject, String message) {

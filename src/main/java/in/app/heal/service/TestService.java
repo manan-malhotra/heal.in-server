@@ -58,7 +58,7 @@ public class TestService {
         return testsRepository.findById(testId);
     }
 
-    public void addTestQuestion(AuxTestQuestion auxTestQuestion) {
+    public ResponseEntity<?> addTestQuestion(AuxTestQuestion auxTestQuestion) {
         TestQuestions testQuestion = new TestQuestions();
         Optional<Tests> tests = this.get(auxTestQuestion.getTestId());
         if(tests.isPresent()){
@@ -69,18 +69,26 @@ public class TestService {
             testQuestion.setOption3(auxTestQuestion.getOption3());
             testQuestion.setOption4(auxTestQuestion.getOption4());
             testQuestionsRepository.save(testQuestion);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage("Test not found");
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
-    public List<TestQuestions> getQuestionsByTestId(Integer testId) {
+    public ResponseEntity<?> getQuestionsByTestId(Integer testId) {
         Optional<Tests> tests = this.get(testId);
         if(tests.isPresent()){
-            return testQuestionsRepository.findByTestId(testId);
+            return new ResponseEntity<>(testQuestionsRepository.findByTestId(testId),HttpStatus.OK);
         }
-        return null;
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage("Test not found");
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
-    public void addScores(AuxTestScoreDTO auxTestScoreDTO) {
+    public ResponseEntity<?> addScores(AuxTestScoreDTO auxTestScoreDTO) {
         Optional<User> user = userService.fetchById(auxTestScoreDTO.getUserId());
         if(user.isPresent()){
             Optional<Tests> test = this.get(auxTestScoreDTO.getTestId());
@@ -91,9 +99,17 @@ public class TestService {
                 testScores.setScore(auxTestScoreDTO.getScore());
                 testScores.setTotal(auxTestScoreDTO.getTotal());
                 testScores.setSubmitted_date(new Date());
-                testScoresRepository.save(testScores);
+                return new ResponseEntity<>(testScoresRepository.save(testScores),HttpStatus.OK);
             }
+            ApiError apiError = new ApiError();
+            apiError.setStatus(HttpStatus.CONFLICT);
+            apiError.setMessage("Test not found");
+            return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
         }
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage("User not found");
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
     public List<TestScores> getRecentScores(int userId) {

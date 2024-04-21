@@ -4,7 +4,6 @@ import in.app.heal.aux.AuxEmailDTO;
 import in.app.heal.aux.AuxTestDTO;
 import in.app.heal.aux.AuxTestQuestion;
 import in.app.heal.aux.AuxTestScoreDTO;
-import in.app.heal.entities.TestQuestions;
 import in.app.heal.entities.Tests;
 import in.app.heal.service.EmailSenderService;
 import in.app.heal.service.TestService;
@@ -36,19 +35,18 @@ public class TestController {
 
     @PostMapping(path = "/addQuestion")
     public ResponseEntity<?> addTestQuestion(@RequestBody AuxTestQuestion auxTestQuestion){
-        service.addTestQuestion(auxTestQuestion);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return service.addTestQuestion(auxTestQuestion);
+        
     }
 
     @GetMapping(path = "/getQuestions/{testId}")
-    public List<TestQuestions> getQuestionsByTestId(@PathVariable Integer testId){
+    public ResponseEntity<?> getQuestionsByTestId(@PathVariable Integer testId){
         return service.getQuestionsByTestId(testId);
     }
 
     @PostMapping(path = "/addScores")
     public ResponseEntity<?> addScores(@RequestBody AuxTestScoreDTO auxTestScoreDTO){
-        service.addScores(auxTestScoreDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return service.addScores(auxTestScoreDTO);
     }
     @GetMapping(path = "/getRecentScores/{userId}")
     public ResponseEntity<?> getRecentScores(@PathVariable int userId){
