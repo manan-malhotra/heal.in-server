@@ -31,41 +31,32 @@ public class AdminController {
 
   @Autowired private BlogsService blogsService;
 
-
-
   @GetMapping("/getAllSelfHelpVideos")
   public List<SelfHelpVideos> getAllSelfHelpVideos() {
     return selfHelpVideosService.getSelfHelpVideosAll();
   }
 
   @PostMapping("/addSelfHelpVideos")
-  public ResponseEntity<AuxSelfHelpVideosDTO>
+  public ResponseEntity<?>
   addSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
-    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
-    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
-    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
-    selfHelpVideosService.addSelfHelpVideos(selfHelpVideos);
-    return new ResponseEntity<>(auxSelfHelpVideosDTO, HttpStatus.OK);
+    return selfHelpVideosService.addSelfHelpVideos(auxSelfHelpVideosDTO);
   }
 
   @PostMapping("/updateSelfHelpVideos")
-  public void
+  public ResponseEntity<?>
   updateSelfHelpVideos(@RequestBody AuxSelfHelpVideosDTO auxSelfHelpVideosDTO) {
-    SelfHelpVideos selfHelpVideos = new SelfHelpVideos();
-    selfHelpVideos.setId(auxSelfHelpVideosDTO.getId());
-    selfHelpVideos.setTitle(auxSelfHelpVideosDTO.getTitle());
-    selfHelpVideos.setUrl(auxSelfHelpVideosDTO.getUrl());
-    selfHelpVideosService.updateSelfHelpVideos(selfHelpVideos);
+    return selfHelpVideosService.updateSelfHelpVideos(auxSelfHelpVideosDTO);
   }
 
   @DeleteMapping("/deleteSelfHelpVideos/{id}")
-  public void deleteSelfHelpVideosById(@PathVariable("id") int id) {
-    selfHelpVideosService.deleteSelfHelpVideosById(id);
+  public ResponseEntity<?>
+  deleteSelfHelpVideosById(@PathVariable("id") int id) {
+    return selfHelpVideosService.deleteSelfHelpVideosById(id);
   }
 
   @DeleteMapping("/deleteAllSelfHelpVideos")
-  public void deleteAllSelfHelpVideos() {
-    selfHelpVideosService.deleteAllSelfHelpVideos();
+  public ResponseEntity<?> deleteAllSelfHelpVideos() {
+    return selfHelpVideosService.deleteAllSelfHelpVideos();
   }
 
   @GetMapping("/getAllBlogs")
@@ -74,53 +65,27 @@ public class AdminController {
   }
 
   @GetMapping("/getBlog/{id}")
-  public ResponseEntity<?> getBlogById(@PathVariable("id") int id){
-    Optional<Blogs> blogsOptional = blogsService.getBlogsById(id);
-    if(blogsOptional.isPresent()){
-      return new ResponseEntity<Blogs>(blogsOptional.get(),HttpStatus.OK);
-    }else{
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+  public ResponseEntity<?> getBlogById(@PathVariable("id") int id) {
+    return blogsService.getBlog(id);
   };
 
   @PostMapping("/addBlogs")
-  public ResponseEntity<AuxBlogsDTO>
-  addBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
-    Blogs blogs = new Blogs();
-    blogs.setTitle(auxBlogsDTO.getTitle());
-    blogs.setDescription(auxBlogsDTO.getDescription());
-    blogs.setPost_date(new Date());
-    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
-    if (user.isPresent()) {
-      blogs.setUser_id(user.get());
-    }
-    blogsService.addBlogs(blogs);
-    return new ResponseEntity<>(auxBlogsDTO, HttpStatus.OK);
+  public ResponseEntity<?> addBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    return blogsService.addBlogs(auxBlogsDTO);
   }
 
   @PostMapping("/updateBlogs")
-  public void updateBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
-    Blogs blogs = new Blogs();
-    blogs.setBlog_id(auxBlogsDTO.getBlog_id());
-    blogs.setTitle(auxBlogsDTO.getTitle());
-    blogs.setDescription(auxBlogsDTO.getDescription());
-    blogs.setPost_date(auxBlogsDTO.getPost_date());
-    // blogs.setUser_id(auxBlogsDTO.getUser_id());
-    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
-    if (user.isPresent()) {
-      blogs.setUser_id(user.get());
-    }
-
-    blogsService.updateBlogs(blogs);
+  public ResponseEntity<?> updateBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    return blogsService.updateBlogs(auxBlogsDTO);
   }
 
   @DeleteMapping("/deleteBlogs/{id}")
-  public void deleteBlogsById(@PathVariable("id") int id) {
-    blogsService.deleteBlogsById(id);
+  public ResponseEntity<?> deleteBlogsById(@PathVariable("id") int id) {
+    return blogsService.deleteBlogsById(id);
   }
 
   @DeleteMapping("/deleteAllBlogs")
-  public void deleteAllBlogs() {
-    blogsService.deleteAllBlogs();
+  public ResponseEntity<?> deleteAllBlogs() {
+    return blogsService.deleteAllBlogs();
   }
 }

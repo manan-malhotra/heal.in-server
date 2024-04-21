@@ -19,5 +19,13 @@ public interface BlogsRepository extends JpaRepository<Blogs, Integer> {
   @Query(value = "DELETE FROM blogs", nativeQuery = true)
   void deleteAll();
 
+  @Modifying
+  @Transactional
+  @Query(value =
+             "UPDATE blogs SET title = ?1, description = ?2 where blog_id = ?3",
+         nativeQuery = true)
+  Integer
+  updateById(String title, String description, int id);
+
   List<Blogs> findAll();
 }

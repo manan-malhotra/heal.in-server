@@ -16,13 +16,21 @@ public interface SelfHelpVideosRepository
   @Transactional
   @Query(value = "DELETE FROM self_help_videos where id = ?1",
          nativeQuery = true)
-  void
+  Integer
   deleteById(int id);
 
   @Modifying
   @Transactional
   @Query(value = "DELETE FROM self_help_videos", nativeQuery = true)
   void deleteAll();
+
+  @Modifying
+  @Transactional
+  @Query(
+      value = "UPDATE self_help_videos SET title = ?1, url = ?2 where id = ?3",
+      nativeQuery = true)
+  Integer
+  updateById(String title, String url, int id);
 
   List<SelfHelpVideos> findAll();
 }
