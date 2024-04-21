@@ -36,9 +36,9 @@ public class JournalController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("Entry not found");
-        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
     @DeleteMapping(path = "/delete/{entryId}")
@@ -49,9 +49,9 @@ public class JournalController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("Entry not found");
-        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
     @GetMapping(path = "/findAll/{userId}")
@@ -66,8 +66,8 @@ public class JournalController {
             return new ResponseEntity<JournalEntry>(entryFound.get(),HttpStatus.OK);
         }
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("Entry not found");
-        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 }

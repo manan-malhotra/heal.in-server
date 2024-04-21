@@ -69,9 +69,9 @@ public class JournalEntryService {
         Optional<User> user = userService.findById(userId);
         if(!user.isPresent()){
             ApiError apiError = new ApiError();
-            apiError.setStatus(HttpStatus.NOT_FOUND);
+            apiError.setStatus(HttpStatus.CONFLICT);
             apiError.setMessage("User not found");
-            return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
         }
         Optional<List<JournalEntry>> entriesFound = repository.findAllByUserId(userId);
         return new ResponseEntity<Optional<List<JournalEntry>>>(entriesFound,HttpStatus.OK);
