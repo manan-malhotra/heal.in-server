@@ -1,7 +1,6 @@
 package in.app.heal.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;

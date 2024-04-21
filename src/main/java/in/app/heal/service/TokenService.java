@@ -8,8 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import io.github.cdimascio.dotenv.Dotenv;
-
-import java.net.http.HttpHeaders;
 import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 
