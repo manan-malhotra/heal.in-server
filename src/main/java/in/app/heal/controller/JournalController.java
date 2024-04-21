@@ -22,7 +22,10 @@ public class JournalController {
     private JournalEntryService journalEntryService;
     @PostMapping(path = "")
     public ResponseEntity<?> addJournalEntry(@RequestBody AuxJournalDTO auxJournalDTO, @RequestHeader(required = false)HttpHeaders headers){
-        String auth = headers.get("authorization").toString();
+        String auth = "";
+        if(headers.get("authorization") != null) {
+            auth = headers.get("authorization").toString();
+        }
         return journalEntryService.addJournalEntry(auxJournalDTO, auth);
     }
 
@@ -54,8 +57,7 @@ public class JournalController {
 
     @GetMapping(path = "/findAll/{userId}")
     public ResponseEntity<?> findAllJournalEntries(@PathVariable Integer userId){
-        Optional<List<JournalEntry>> entriesFound = journalEntryService.findAllByUserId(userId);
-        return new ResponseEntity<Optional<List<JournalEntry>>>(entriesFound,HttpStatus.OK);
+        return journalEntryService.findAllByUserId(userId);
     }
 
     @GetMapping(path ="findById/{entryId}")

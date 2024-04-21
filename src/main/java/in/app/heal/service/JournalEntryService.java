@@ -2,6 +2,7 @@ package in.app.heal.service;
 
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.entities.JournalEntry;
+import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.JournalEntryRepository;
@@ -18,6 +19,8 @@ import java.util.Optional;
 public class JournalEntryService {
     @Autowired
     TokenService tokenService;
+    @Autowired
+    UserService userService;
     @Autowired
     UserCredentialsService userCredentialsService;
     @Autowired
@@ -36,8 +39,8 @@ public class JournalEntryService {
                 }
                 ApiError apiError = new ApiError();
                 apiError.setMessage("User not found");
-                apiError.setStatus(HttpStatus.NOT_FOUND);
-                return new ResponseEntity<Object>(apiError,HttpStatus.NOT_FOUND);
+                apiError.setStatus(HttpStatus.CONFLICT);
+                return new ResponseEntity<Object>(apiError,HttpStatus.CONFLICT);
             }catch (Exception e){
                 ApiError apiError = new ApiError();
                 apiError.setMessage("Unauthorized Access");
@@ -48,7 +51,7 @@ public class JournalEntryService {
             ApiError apiError = new ApiError();
             apiError.setMessage("Token Missing");
             apiError.setStatus(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(apiError,HttpStatus.BAD_REQUEST);
         }
     }
     public void addJournalEntry(JournalEntry journalEntry){
@@ -62,8 +65,16 @@ public class JournalEntryService {
         repository.deleteById(entryId);
     }
 
-    public Optional<List<JournalEntry>> findAllByUserId(Integer userId){
-        return repository.findAllByUserId(userId);
+    public ResponseEntity<?> findAllByUserId(Integer userId){
+        Optional<User> user = userService.findById(userId);
+        if(!user.isPresent()){
+            ApiError apiError = new ApiError();
+            apiError.setStatus(HttpStatus.NOT_FOUND);
+            apiError.setMessage("User not found");
+            return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+        }
+        Optional<List<JournalEntry>> entriesFound = repository.findAllByUserId(userId);
+        return new ResponseEntity<Optional<List<JournalEntry>>>(entriesFound,HttpStatus.OK);
     }
 
     public JournalEntry populateJournalEntry(AuxJournalDTO auxJournalDTO){
