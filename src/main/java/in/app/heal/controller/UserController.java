@@ -104,4 +104,9 @@ public class UserController {
   changePassword(@RequestBody AuxChangePasswordDTO changePasswordDTO) {
     return userCredentialsService.changePassword(changePasswordDTO);
   }
+  @PostMapping(path = "/updatePassword")
+  public ResponseEntity<?>
+  updatePassword(@RequestBody AuxChangePasswordDTO changePasswordDTO) {
+    return userCredentialsService.updatePassword(changePasswordDTO);
+  }
 }

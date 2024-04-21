@@ -155,4 +155,33 @@ public class UserCredentialsService {
     this.addUser(alreadyExisting.get());
     return new ResponseEntity<String>(HttpStatus.OK);
   }
+
+  public ResponseEntity<?>
+  updatePassword(AuxChangePasswordDTO changePasswordDTO) {
+    Optional<UserCredentials> alreadyExisting =
+        this.findByEmail(changePasswordDTO.getEmail());
+    if (alreadyExisting.isEmpty()) {
+      System.out.println("User does not exist");
+      ApiError apiError = new ApiError();
+      apiError.setMessage("User does not exist");
+      apiError.setStatus(HttpStatus.CONFLICT);
+      return new ResponseEntity<Object>(apiError, HttpStatus.CONFLICT);
+    }
+    if (alreadyExisting.isPresent()) {
+      UserCredentials userCredentialsfound = alreadyExisting.get();
+      String password = userCredentialsfound.getPassword();
+      boolean match = passwordEncoder.matches(
+          changePasswordDTO.getCurrentPassword(), password);
+      if (match) {
+        String hash = passwordEncoder.encode(changePasswordDTO.getPassword());
+        alreadyExisting.get().setPassword(hash);
+        this.addUser(alreadyExisting.get());
+        return new ResponseEntity<String>(HttpStatus.OK);
+      } else {
+        System.out.println("Password does not match");
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+      }
+    }
+    return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+  }
 }

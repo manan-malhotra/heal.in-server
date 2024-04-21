@@ -10,5 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AuxChangePasswordDTO {
   private String email;
+  private String currentPassword;
   private String password;
 }
