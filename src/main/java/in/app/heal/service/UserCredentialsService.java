@@ -56,6 +56,12 @@ public class UserCredentialsService {
   }
   public ResponseEntity<?> getProfileDetails(String auth) {
     String token = tokenService.getToken(auth);
+    if (token.isEmpty()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.UNAUTHORIZED);
+      apiError.setMessage("Missing token");
+      return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
+    }
     try {
       String email = tokenService.getEmailFromToken(token);
       Optional<UserCredentials> userCredentialsOptional =
@@ -74,9 +80,15 @@ public class UserCredentialsService {
         auxUserDTO.setUserId(user.getUser_id());
         return new ResponseEntity<AuxUserDTO>(auxUserDTO, HttpStatus.OK);
       }
-      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     } catch (Exception e) {
-      return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      apiError.setMessage(e.getMessage());
+      return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
