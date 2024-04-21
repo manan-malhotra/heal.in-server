@@ -2,6 +2,7 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxJournalDTO;
 import in.app.heal.entities.JournalEntry;
+import in.app.heal.error.ApiError;
 import in.app.heal.service.JournalEntryService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,10 @@ public class JournalController {
     private JournalEntryService journalEntryService;
     @PostMapping(path = "")
     public ResponseEntity<?> addJournalEntry(@RequestBody AuxJournalDTO auxJournalDTO, @RequestHeader(required = false)HttpHeaders headers){
-        String auth = headers.get("authorization").toString();
+        String auth = "";
+        if(headers.get("authorization") != null) {
+            auth = headers.get("authorization").toString();
+        }
         return journalEntryService.addJournalEntry(auxJournalDTO, auth);
     }
 
@@ -32,7 +36,10 @@ public class JournalController {
             journalEntryService.ediJournalEntry(entryFound.get(), auxJournalEditDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping(path = "/delete/{entryId}")
@@ -42,13 +49,15 @@ public class JournalController {
             journalEntryService.deleteById(entryId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(path = "/findAll/{userId}")
     public ResponseEntity<?> findAllJournalEntries(@PathVariable Integer userId){
-        Optional<List<JournalEntry>> entriesFound = journalEntryService.findAllByUserId(userId);
-        return new ResponseEntity<Optional<List<JournalEntry>>>(entriesFound,HttpStatus.OK);
+        return journalEntryService.findAllByUserId(userId);
     }
 
     @GetMapping(path ="findById/{entryId}")
@@ -57,6 +66,9 @@ public class JournalController {
         if(entryFound.isPresent()){
             return new ResponseEntity<JournalEntry>(entryFound.get(),HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage("Entry not found");
+        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
     }
 }
