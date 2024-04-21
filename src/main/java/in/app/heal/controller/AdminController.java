@@ -75,43 +75,22 @@ public class AdminController {
   };
 
   @PostMapping("/addBlogs")
-  public ResponseEntity<AuxBlogsDTO>
-  addBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
-    Blogs blogs = new Blogs();
-    blogs.setTitle(auxBlogsDTO.getTitle());
-    blogs.setDescription(auxBlogsDTO.getDescription());
-    blogs.setPost_date(new Date());
-    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
-    if (user.isPresent()) {
-      blogs.setUser_id(user.get());
-    }
-    blogsService.addBlogs(blogs);
-    return new ResponseEntity<>(auxBlogsDTO, HttpStatus.OK);
+  public ResponseEntity<?> addBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    return blogsService.addBlogs(auxBlogsDTO);
   }
 
   @PostMapping("/updateBlogs")
-  public void updateBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
-    Blogs blogs = new Blogs();
-    blogs.setBlog_id(auxBlogsDTO.getBlog_id());
-    blogs.setTitle(auxBlogsDTO.getTitle());
-    blogs.setDescription(auxBlogsDTO.getDescription());
-    blogs.setPost_date(auxBlogsDTO.getPost_date());
-    // blogs.setUser_id(auxBlogsDTO.getUser_id());
-    Optional<User> user = userService.fetchById(auxBlogsDTO.getUser_id());
-    if (user.isPresent()) {
-      blogs.setUser_id(user.get());
-    }
-
-    blogsService.updateBlogs(blogs);
+  public ResponseEntity<?> updateBlogs(@RequestBody AuxBlogsDTO auxBlogsDTO) {
+    return blogsService.updateBlogs(auxBlogsDTO);
   }
 
   @DeleteMapping("/deleteBlogs/{id}")
-  public void deleteBlogsById(@PathVariable("id") int id) {
-    blogsService.deleteBlogsById(id);
+  public ResponseEntity<?> deleteBlogsById(@PathVariable("id") int id) {
+    return blogsService.deleteBlogsById(id);
   }
 
   @DeleteMapping("/deleteAllBlogs")
-  public void deleteAllBlogs() {
-    blogsService.deleteAllBlogs();
+  public ResponseEntity<?> deleteAllBlogs() {
+    return blogsService.deleteAllBlogs();
   }
 }
