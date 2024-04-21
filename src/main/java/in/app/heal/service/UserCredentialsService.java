@@ -109,6 +109,19 @@ public class UserCredentialsService {
   }
 
   public ResponseEntity<?> registerUser(AuxUserDTO auxUserDTO) {
+    if(auxUserDTO.getFirstName()== null || auxUserDTO.getFirstName().isEmpty() || 
+      auxUserDTO.getLastName()== null || auxUserDTO.getLastName().isEmpty() ||
+      auxUserDTO.getEmail()== null || auxUserDTO.getEmail().isEmpty() || 
+      auxUserDTO.getPassword()== null ||  auxUserDTO.getPassword().isEmpty() || 
+      auxUserDTO.getAge()== null || auxUserDTO.getAge().equals(0) ||
+      auxUserDTO.getContact()== null || auxUserDTO.getContact().equals(0) ||
+      auxUserDTO.getGender()== null || auxUserDTO.getEmail().isEmpty() 
+      ){
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.BAD_REQUEST);
+      apiError.setMessage("Missing credentials");
+      return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
     Optional<UserCredentials> alreadyExisting =
         this.findByEmail(auxUserDTO.getEmail());
     if (alreadyExisting.isPresent()) {
