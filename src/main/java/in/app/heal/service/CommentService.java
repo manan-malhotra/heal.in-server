@@ -5,6 +5,7 @@ import in.app.heal.aux.AuxCommentEditDTO;
 import in.app.heal.entities.Comments;
 import in.app.heal.entities.PublicQNA;
 import in.app.heal.entities.User;
+import in.app.heal.error.ApiError;
 import in.app.heal.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,14 @@ public class CommentService {
             this.addComment(comment);
             return new ResponseEntity < > (HttpStatus.OK);
         }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        if (!questionFound.isPresent()) {
+            apiError.setMessage("Question not found");
+        }else{
+            apiError.setMessage("User not found");
+        }
+        return new ResponseEntity < > (apiError, HttpStatus.CONFLICT);
     }
 
     public Optional<Comments> findById(Integer commentId){

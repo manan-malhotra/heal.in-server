@@ -66,8 +66,7 @@ public class UserController {
   }
 
   @PostMapping(path = "/comment")
-  public ResponseEntity<?>
-  addComment(@RequestBody AuxCommentDTO auxCommentDTO) {
+  public ResponseEntity<?> addComment(@RequestBody AuxCommentDTO auxCommentDTO) {
     return commentService.addComment(auxCommentDTO);
   }
 
