@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,6 @@ public class UserController {
   @Autowired private UserCredentialsService userCredentialsService;
   @Autowired private PublicQNAService publicQNAService;
   @Autowired private CommentService commentService;
-  PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   Dotenv dotenv = Dotenv.load();
 
@@ -69,14 +66,12 @@ public class UserController {
   }
 
   @PostMapping(path = "/comment")
-  public ResponseEntity<?>
-  addComment(@RequestBody AuxCommentDTO auxCommentDTO) {
+  public ResponseEntity<?> addComment(@RequestBody AuxCommentDTO auxCommentDTO) {
     return commentService.addComment(auxCommentDTO);
   }
 
   @PutMapping(path = "/editComment")
-  public ResponseEntity<?>
-  editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO) {
+  public ResponseEntity<?> editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO) {
     return commentService.editComment(auxCommentEditDTO);
   }
 
@@ -86,15 +81,11 @@ public class UserController {
   }
   @PutMapping(path = "/approve/{commentId}")
   public ResponseEntity<?> approveComment(@PathVariable Integer commentId) {
-    commentService.approveComment(commentId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return commentService.approveComment(commentId);
   }
   @GetMapping(path = "/allComments/{questionId}")
   public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {
-    Optional<List<Comments>> allComments =
-        commentService.findAllByQuestionId(questionId);
-    return new ResponseEntity<Optional<List<Comments>>>(allComments,
-                                                        HttpStatus.OK);
+    return commentService.findAllComments(questionId);
   }
   @PostMapping(path = "/forgotPassword")
   public ResponseEntity<?>

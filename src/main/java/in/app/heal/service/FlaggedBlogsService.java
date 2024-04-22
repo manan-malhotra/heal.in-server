@@ -7,8 +7,6 @@ import in.app.heal.entities.FlaggedBlogs;
 import in.app.heal.entities.User;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.FlaggedBlogsRepository;
-import in.app.heal.service.BlogsService;
-import in.app.heal.service.UserService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

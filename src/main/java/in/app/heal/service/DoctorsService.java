@@ -6,7 +6,6 @@ import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.DoctorsRepository;
-import in.app.heal.repository.UserCredentialsRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class DoctorsService {
 
   @Autowired private DoctorsRepository repository;
-  @Autowired private UserCredentialsRepository userCredentialsRepository;
   @Autowired private UserService userService;
   @Autowired private UserCredentialsService userCredentialsService;
   PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
