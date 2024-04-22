@@ -7,8 +7,6 @@ import in.app.heal.entities.PublicQNA;
 import in.app.heal.entities.User;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.FlaggedPublicQNARepository;
-import in.app.heal.service.PublicQNAService;
-import in.app.heal.service.UserService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -6,7 +6,6 @@ import in.app.heal.entities.Blogs;
 import in.app.heal.entities.User;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.BlogsRepository;
-import in.app.heal.service.UserService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,8 +59,6 @@ public class BlogsService {
   }
 
   public Optional<Blogs> getBlogsById(int id) {
-    Optional<Blogs> blog = repository.findById(id);
-
     return repository.findById(id);
   }
 
