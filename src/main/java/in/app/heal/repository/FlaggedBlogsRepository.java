@@ -11,16 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface FlaggedBlogsRepository
     extends JpaRepository<FlaggedBlogs, Integer> {
 
-  @Modifying
-  @Transactional
-  @Query(value = "DELETE FROM flagged_blogs where id = ?1", nativeQuery = true)
-  void deleteById(int id);
-
-  @Modifying
-  @Transactional
-  @Query(value = "DELETE FROM flagged_blogs", nativeQuery = true)
-  void deleteAll();
-
   List<FlaggedBlogs> findAll();
 
   Optional<FlaggedBlogs> findById(int id);

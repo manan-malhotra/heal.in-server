@@ -36,34 +36,7 @@ public class FlagController {
   @PostMapping("/blogs/addFlaggedBlogs")
   public ResponseEntity<?>
   addFlag(@RequestBody AuxFlaggedBlogsDTO auxFlaggedBlogsDTO) {
-    FlaggedBlogs flaggedBlogs = new FlaggedBlogs();
-    Optional<Blogs> blog =
-        blogsService.getBlogsById(auxFlaggedBlogsDTO.getBlog_id());
-    if (blog.isPresent()) {
-      flaggedBlogs.setBlog_id(blog.get());
-    }
-    Optional<User> user =
-        userService.fetchById(auxFlaggedBlogsDTO.getUser_id());
-    if (user.isPresent()) {
-      flaggedBlogs.setUser_id(user.get());
-    }
-    List<FlaggedBlogs> existingBlogs = flaggedBlogsService.getFlaggedBlogsByBlogId(blog.get().getBlog_id());
-    for (int i = 0; i < existingBlogs.size(); i++) {
-      if(Objects.equals(existingBlogs.get(i).getUser_id().getUser_id(), auxFlaggedBlogsDTO.getUser_id())){
-        return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-      }
-    }
-
-    flaggedBlogs.setReason(auxFlaggedBlogsDTO.getReason());
-    flaggedBlogs.setFlagged_date(new Date());
-    flaggedBlogsService.addFlaggedBlogs(flaggedBlogs);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @DeleteMapping("/blogs/deleteFlaggedBlogs/{id}")
-  public ResponseEntity<?> deleteFlag(@PathVariable("id") int id) {
-    flaggedBlogsService.deleteFlaggedBlogsById(id);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return flaggedBlogsService.addFlaggedBlogs(auxFlaggedBlogsDTO);
   }
 
   @GetMapping("/blogs/getAllFlaggedBlogs")
@@ -86,36 +59,7 @@ public class FlagController {
   @PostMapping("/publicQNA/addFlaggedPublicQNA")
   public ResponseEntity<?>
   addFlag(@RequestBody AuxFlaggedPublicQNADTO auxFlaggedPublicQNADTO) {
-    FlaggedPublicQNA flaggedPublicQNA = new FlaggedPublicQNA();
-    Optional<PublicQNA> publicQNA =
-        publicQNAService.findById(auxFlaggedPublicQNADTO.getPublic_qna_id());
-    if (publicQNA.isPresent()) {
-      flaggedPublicQNA.setPublic_qna_id(publicQNA.get());
-    }
-    Optional<User> user =
-        userService.fetchById(auxFlaggedPublicQNADTO.getUser_id());
-    if (user.isPresent()) {
-      flaggedPublicQNA.setUser_id(user.get());
-    }
-    List<FlaggedPublicQNA> existingQNA = flaggedPublicQNAService.getFlaggedByPublicQNAId(publicQNA.get().getPublic_qna_id());
-    for (int i = 0; i < existingQNA.size(); i++) {
-      if(Objects.equals(existingQNA.get(i).getUser_id().getUser_id(), auxFlaggedPublicQNADTO.getUser_id())){
-        System.out.println(existingQNA.get(i).getUser_id().getUser_id());
-        return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-      }
-    }
-    flaggedPublicQNA.setReason(auxFlaggedPublicQNADTO.getReason());
-    flaggedPublicQNA.setFlagged_date(new Date());
-    flaggedPublicQNAService.addFlaggedPublicQNA(flaggedPublicQNA);
-
-    return new ResponseEntity<List<FlaggedPublicQNA>>(existingQNA,HttpStatus.OK);
-  }
-
-  @DeleteMapping("/publicQNA/deleteFlaggedPublicQNA/{id}")
-  public ResponseEntity<?>
-  deleteFlaggedPublicQNAById(@PathVariable("id") int id) {
-    flaggedPublicQNAService.deleteById(id);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return flaggedPublicQNAService.addFlaggedPublicQNA(auxFlaggedPublicQNADTO);
   }
 
   @GetMapping("/publicQNA/getAllFlaggedPublicQNA")
