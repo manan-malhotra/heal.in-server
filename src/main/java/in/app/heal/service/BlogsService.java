@@ -32,7 +32,10 @@ public class BlogsService {
     if (user.isPresent()) {
       blogs.setUser_id(user.get());
     } else {
-      return new ResponseEntity<>(HttpStatus.CONFLICT);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     try {
       repository.save(blogs);

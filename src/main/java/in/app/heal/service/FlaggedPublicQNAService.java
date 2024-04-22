@@ -76,6 +76,11 @@ public class FlaggedPublicQNAService {
         userService.fetchById(auxFlaggedPublicQNADTO.getUser_id());
     if (user.isPresent()) {
       flaggedPublicQNA.setUser_id(user.get());
+    } else {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     if (publicQNAService.findById(auxFlaggedPublicQNADTO.getPublic_qna_id())
             .isPresent()) {
@@ -103,9 +108,9 @@ public class FlaggedPublicQNAService {
       }
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Public QNA not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 
@@ -113,7 +118,32 @@ public class FlaggedPublicQNAService {
     return repository.getFlaggedByUserId(userId);
   }
 
+  public ResponseEntity<?> getFlaggedByUId(int userId) {
+    Optional<User> user = userService.findById(userId);
+    if (!user.isPresent()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+    List<FlaggedPublicQNA> flaggedPublicQNA = repository.findByUserId(userId);
+    return new ResponseEntity<>(flaggedPublicQNA, HttpStatus.OK);
+  }
+
   public List<FlaggedPublicQNA> getFlaggedByPublicQNAId(int publicQNAId) {
     return repository.findByPublicQNAId(publicQNAId);
+  }
+
+  public ResponseEntity<?> getFlaggedByPQNAId(int publicQNAId) {
+    Optional<PublicQNA> publicQNA = publicQNAService.findById(publicQNAId);
+    if (!publicQNA.isPresent()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("Public QNA not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+    List<FlaggedPublicQNA> flaggedPublicQNA =
+        repository.findByPublicQNAId(publicQNAId);
+    return new ResponseEntity<>(flaggedPublicQNA, HttpStatus.OK);
   }
 }

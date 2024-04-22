@@ -34,14 +34,19 @@ public class FlaggedBlogsService {
 
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Blog not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     Optional<User> user =
         userService.fetchById(auxFlaggedBlogsDTO.getUser_id());
     if (user.isPresent()) {
       flaggedBlogs.setUser_id(user.get());
+    } else {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     List<FlaggedBlogs> existingBlogs =
         this.getFlaggedBlogsByBlogId(blog.get().getBlog_id());
@@ -109,7 +114,29 @@ public class FlaggedBlogsService {
     return repository.findByBlogId(blogId);
   }
 
+  public ResponseEntity<?> getFlaggedBlogsByBId(int blogId) {
+    if (this.getFlaggedBlogsByBlogId(blogId).size() == 0) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("No flagged blogs found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+    return new ResponseEntity<>(this.getFlaggedBlogsByBlogId(blogId),
+                                HttpStatus.OK);
+  }
+
   public List<FlaggedBlogs> getFlaggedBlogsByUserId(int userId) {
     return repository.findByUserId(userId);
+  }
+
+  public ResponseEntity<?> getFlaggedBlogsByUId(int userId) {
+    if (this.getFlaggedBlogsByUserId(userId).size() == 0) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("No flagged blogs found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+    return new ResponseEntity<>(this.getFlaggedBlogsByUserId(userId),
+                                HttpStatus.OK);
   }
 }
