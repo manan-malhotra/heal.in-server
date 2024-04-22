@@ -10,7 +10,6 @@ import in.app.heal.error.ApiError;
 import in.app.heal.repository.UserCredentialsRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-
 import org.springframework.http.HttpHeaders;
 import java.util.Optional;
 import java.util.Random;
@@ -19,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -32,7 +29,7 @@ public class UserCredentialsService {
   @Autowired private UserCredentialsRepository repository;
   @Autowired private JavaMailSender mailSender;
   @Autowired private TemplateEngine templateEngine;
-  PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  @Autowired private PasswordService passwordService;
   public void addUser(UserCredentials userCredentials) {
     repository.save(userCredentials);
   }
@@ -52,7 +49,7 @@ public class UserCredentialsService {
     if (userCredentials.isPresent()) {
       UserCredentials userCredentialsfound = userCredentials.get();
       String password = userCredentialsfound.getPassword();
-      boolean match = passwordEncoder.matches(loginDTO.getPassword(), password);
+      boolean match = passwordService.checkPassword(loginDTO.getPassword(), password);
       if (match) {
         String jwtToken = tokenService.generateToken(loginDTO.getEmail());
         HttpHeaders headers = new HttpHeaders();
@@ -135,7 +132,7 @@ public class UserCredentialsService {
     UserCredentials newUserCredentials = new UserCredentials();
     newUserCredentials.setEmail(auxUserDTO.getEmail());
     newUserCredentials.setUser_id(user);
-    String hash = passwordEncoder.encode(auxUserDTO.getPassword());
+    String hash = passwordService.hashPassword(auxUserDTO.getPassword());
     newUserCredentials.setPassword(hash);
     newUserCredentials.setRole(auxUserDTO.getRole());
     this.addUser(newUserCredentials);
@@ -193,7 +190,7 @@ public class UserCredentialsService {
       apiError.setStatus(HttpStatus.CONFLICT);
       return new ResponseEntity<Object>(apiError, HttpStatus.CONFLICT);
     }
-    String hash = passwordEncoder.encode(changePasswordDTO.getPassword());
+    String hash = passwordService.hashPassword(changePasswordDTO.getPassword());
     alreadyExisting.get().setPassword(hash);
     this.addUser(alreadyExisting.get());
     return new ResponseEntity<String>(HttpStatus.OK);
@@ -203,28 +200,25 @@ public class UserCredentialsService {
   updatePassword(AuxChangePasswordDTO changePasswordDTO) {
     Optional<UserCredentials> alreadyExisting =
         this.findByEmail(changePasswordDTO.getEmail());
-    if (alreadyExisting.isEmpty()) {
-      System.out.println("User does not exist");
-      ApiError apiError = new ApiError();
-      apiError.setMessage("User does not exist");
-      apiError.setStatus(HttpStatus.CONFLICT);
-      return new ResponseEntity<Object>(apiError, HttpStatus.CONFLICT);
-    }
     if (alreadyExisting.isPresent()) {
       UserCredentials userCredentialsfound = alreadyExisting.get();
       String password = userCredentialsfound.getPassword();
-      boolean match = passwordEncoder.matches(
-          changePasswordDTO.getCurrentPassword(), password);
+      boolean match = passwordService.checkPassword(changePasswordDTO.getCurrentPassword(), password);
       if (match) {
-        String hash = passwordEncoder.encode(changePasswordDTO.getPassword());
+        String hash = passwordService.hashPassword(changePasswordDTO.getPassword());
         alreadyExisting.get().setPassword(hash);
         this.addUser(alreadyExisting.get());
         return new ResponseEntity<String>(HttpStatus.OK);
       } else {
-        System.out.println("Password does not match");
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        ApiError apiError = new ApiError();
+        apiError.setMessage("Incorrect password");
+        apiError.setStatus(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
       }
     }
-    return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+    ApiError apiError = new ApiError();
+    apiError.setMessage("User does not exist");
+    apiError.setStatus(HttpStatus.CONFLICT);
+    return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
   }
 }
