@@ -59,17 +59,29 @@ public class CommentService {
         repository.delete(comments);
     }
 
-    public Optional<List<Comments>> findAllByQuestionId(Integer questionId){
-        return repository.findAllByPublicQnaId(questionId);
+    public ResponseEntity < ? > findAllComments(Integer questionId){
+        Optional < PublicQNA > questionFound = publicQNAService.findById(questionId);
+        if(!questionFound.isPresent()){
+            ApiError apiError = new ApiError();
+            apiError.setStatus(HttpStatus.CONFLICT);
+            apiError.setMessage("Question not found");
+            return new ResponseEntity < > (apiError,HttpStatus.CONFLICT);
+        }
+        Optional<List<Comments>> comments = repository.findAllByPublicQnaId(questionId);
+        return new ResponseEntity<Optional<List<Comments>>>(comments,HttpStatus.OK);
     }
     
-    public void approveComment(Integer commentId){
+    public ResponseEntity<?> approveComment(Integer commentId){
         Optional<Comments> commentsFound = repository.findById(commentId);
         if(commentsFound.isPresent()){
             Comments comment = commentsFound.get();
             comment.setApproved(true);
-            repository.save(comment);
+            return new ResponseEntity<>(repository.save(comment),HttpStatus.OK);
         }
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage("Comment not found");
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 
     public ResponseEntity < ? > editComment(AuxCommentEditDTO auxCommentEditDTO) {
@@ -86,7 +98,16 @@ public class CommentService {
             this.addComment(comment);
             return new ResponseEntity < > (HttpStatus.OK);
         }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        if (!questionFound.isPresent()) {
+            apiError.setMessage("Question not found");
+        }else if(!userFound.isPresent()){
+            apiError.setMessage("User not found");
+        }else{
+            apiError.setMessage("Comment not found");
+        }
+        return new ResponseEntity < > (apiError, HttpStatus.CONFLICT);
     }
 
     public ResponseEntity < ? > deleteComment(Integer commentId) {
@@ -96,6 +117,9 @@ public class CommentService {
             this.delete(comment);
             return new ResponseEntity < > (HttpStatus.OK);
         }
-        return new ResponseEntity < > (HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT);
+        apiError.setMessage("Comment not found");
+        return new ResponseEntity < > (apiError,HttpStatus.CONFLICT);
     }
 }

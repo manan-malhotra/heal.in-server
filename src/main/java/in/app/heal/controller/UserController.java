@@ -71,8 +71,7 @@ public class UserController {
   }
 
   @PutMapping(path = "/editComment")
-  public ResponseEntity<?>
-  editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO) {
+  public ResponseEntity<?> editComment(@RequestBody AuxCommentEditDTO auxCommentEditDTO) {
     return commentService.editComment(auxCommentEditDTO);
   }
 
@@ -82,15 +81,11 @@ public class UserController {
   }
   @PutMapping(path = "/approve/{commentId}")
   public ResponseEntity<?> approveComment(@PathVariable Integer commentId) {
-    commentService.approveComment(commentId);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return commentService.approveComment(commentId);
   }
   @GetMapping(path = "/allComments/{questionId}")
   public ResponseEntity<?> findAllComments(@PathVariable Integer questionId) {
-    Optional<List<Comments>> allComments =
-        commentService.findAllByQuestionId(questionId);
-    return new ResponseEntity<Optional<List<Comments>>>(allComments,
-                                                        HttpStatus.OK);
+    return commentService.findAllComments(questionId);
   }
   @PostMapping(path = "/forgotPassword")
   public ResponseEntity<?>
