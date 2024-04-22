@@ -37,9 +37,9 @@ public class DoctorsService {
       return new ResponseEntity<>(doctor, HttpStatus.OK);
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Doctor not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 
@@ -92,9 +92,9 @@ public class DoctorsService {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Doctor not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 
@@ -126,15 +126,15 @@ public class DoctorsService {
         }
       } else {
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("User not found");
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
       }
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Doctor not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 }
