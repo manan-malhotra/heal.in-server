@@ -86,7 +86,17 @@ public class DoctorsService {
     }
   }
 
-  public void deleteDoctor(int id) { repository.deleteById(id); }
+  public ResponseEntity<?> deleteDoctor(int id) {
+    if (repository.findById(id).isPresent()) {
+      repository.deleteById(id);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setMessage("Doctor not found");
+      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+  }
 
   public void deleteAll() { repository.deleteAll(); }
 
