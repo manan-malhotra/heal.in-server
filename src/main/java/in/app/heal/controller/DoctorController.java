@@ -2,14 +2,9 @@ package in.app.heal.controller;
 
 import in.app.heal.aux.AuxDoctorsDTO;
 import in.app.heal.entities.Doctors;
-import in.app.heal.entities.User;
-import in.app.heal.entities.UserCredentials;
 import in.app.heal.service.DoctorsService;
-import in.app.heal.service.UserCredentialsService;
-import in.app.heal.service.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class DoctorController {
 
   @Autowired private DoctorsService doctorsService;
-  @Autowired private UserCredentialsService userCredentialsService;
-  @Autowired private UserService userService;
   Dotenv dotenv = Dotenv.load();
 
   @PostMapping("/addDoctor")
