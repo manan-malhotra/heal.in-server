@@ -44,9 +44,9 @@ public class SelfHelpVideosService {
     if (repository.deleteById(id) == 1) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Video not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 
@@ -68,9 +68,9 @@ public class SelfHelpVideosService {
         return new ResponseEntity<>(selfHelpVideos, HttpStatus.OK);
       } else {
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("Video not found");
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
       }
     } catch (Exception e) {
       ApiError apiError = new ApiError();

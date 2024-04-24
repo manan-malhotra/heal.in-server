@@ -31,7 +31,10 @@ public class BlogsService {
     if (user.isPresent()) {
       blogs.setUser_id(user.get());
     } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     try {
       repository.save(blogs);
@@ -68,9 +71,9 @@ public class BlogsService {
       return new ResponseEntity<Blogs>(blog.get(), HttpStatus.OK);
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Blog not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
   }
 
@@ -84,9 +87,9 @@ public class BlogsService {
       repository.deleteById(id);
     } else {
       ApiError apiError = new ApiError();
-      apiError.setStatus(HttpStatus.NOT_FOUND);
+      apiError.setStatus(HttpStatus.CONFLICT);
       apiError.setMessage("Blog not found");
-      return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -113,16 +116,16 @@ public class BlogsService {
     if (user.isPresent()) {
       blogs.setUser_id(user.get());
     } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
     try {
       if (repository.updateById(auxBlogsDTO.getTitle(),
                                 auxBlogsDTO.getDescription(),
                                 auxBlogsDTO.getBlog_id()) == 0) {
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setStatus(HttpStatus.CONFLICT);
         apiError.setMessage("Blog not found");
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
       } else {
         return new ResponseEntity<>(blogs, HttpStatus.OK);
       }
