@@ -7,6 +7,8 @@ import in.app.heal.aux.LoginDTO;
 import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.error.ApiError;
+import in.app.heal.repository.JournalEntryRepository;
+import in.app.heal.repository.PublicQNARepository;
 import in.app.heal.repository.UserCredentialsRepository;
 import in.app.heal.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -29,6 +31,8 @@ public class UserCredentialsService {
   @Autowired private UserService userService;
   @Autowired private UserCredentialsRepository repository;
   @Autowired private UserRepository userRepository;
+  @Autowired private PublicQNARepository publicQNARepository;
+  @Autowired private JournalEntryRepository journalEntryRepository;
   @Autowired private JavaMailSender mailSender;
   @Autowired private TemplateEngine templateEngine;
   @Autowired private PasswordService passwordService;
@@ -152,8 +156,8 @@ public class UserCredentialsService {
           this.findByEmail(email);
       if (userCredentialsOptional.isPresent()) {
         UserCredentials credentials = userCredentialsOptional.get();
-        User user = credentials.getUser_id();
-        userRepository.delete(user);
+        publicQNARepository.deleteByUserId(credentials.getUser_id().getUser_id());
+        journalEntryRepository.deleteByUserId(credentials.getUser_id().getUser_id());
         return new ResponseEntity<>(HttpStatus.OK);
       }
       ApiError apiError = new ApiError();
