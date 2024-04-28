@@ -3,8 +3,6 @@ package in.app.heal.controller;
 import in.app.heal.aux.AuxFlaggedBlogsDTO;
 import in.app.heal.aux.AuxFlaggedPublicQNADTO;
 import in.app.heal.aux.FlagDTO;
-import in.app.heal.entities.FlaggedBlogs;
-import in.app.heal.entities.FlaggedPublicQNA;
 import in.app.heal.service.FlaggedBlogsService;
 import in.app.heal.service.FlaggedPublicQNAService;
 import java.util.*;
