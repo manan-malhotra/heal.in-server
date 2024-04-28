@@ -41,6 +41,24 @@ public class UserController {
     return userCredentialsService.loginUser(loginDTO);
   }
 
+  @DeleteMapping(path = "/deleteProfile")
+  public ResponseEntity<?> deleteProfile(@RequestHeader HttpHeaders headers) {
+    String auth = "";
+    if(headers.get("authorization") != null) {
+      auth = headers.get("authorization").toString();
+    }
+    return userCredentialsService.deleteProfile(auth);
+  }
+
+  @DeleteMapping(path = "/deleteData")
+  public ResponseEntity<?> deleteData(@RequestHeader HttpHeaders headers) {
+    String auth = "";
+    if(headers.get("authorization") != null) {
+      auth = headers.get("authorization").toString();
+    }
+    return userCredentialsService.deleteData(auth);
+  }
+
   @PostMapping(path = "/addQuestion")
   public ResponseEntity<?>
   addPublicQuestion(@RequestBody AuxPublicQNADTO auxPublicQNADTO) {

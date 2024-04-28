@@ -8,6 +8,7 @@ import in.app.heal.entities.User;
 import in.app.heal.entities.UserCredentials;
 import in.app.heal.error.ApiError;
 import in.app.heal.repository.UserCredentialsRepository;
+import in.app.heal.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,7 @@ public class UserCredentialsService {
   @Autowired private TokenService tokenService;
   @Autowired private UserService userService;
   @Autowired private UserCredentialsRepository repository;
+  @Autowired private UserRepository userRepository;
   @Autowired private JavaMailSender mailSender;
   @Autowired private TemplateEngine templateEngine;
   @Autowired private PasswordService passwordService;
@@ -105,6 +107,67 @@ public class UserCredentialsService {
     }
   }
 
+  public ResponseEntity<?> deleteProfile(String auth) {
+    String token = tokenService.getToken(auth);
+    if (token.isEmpty()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.UNAUTHORIZED);
+      apiError.setMessage("Missing token");
+      return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
+    }
+    try {
+      String email = tokenService.getEmailFromToken(token);
+      Optional<UserCredentials> userCredentialsOptional =
+          this.findByEmail(email);
+      if (userCredentialsOptional.isPresent()) {
+        UserCredentials credentials = userCredentialsOptional.get();
+        User user = credentials.getUser_id();
+        userRepository.delete(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+      }
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
+    }catch (Exception e) {
+      System.out.println(e);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      apiError.setMessage(e.getMessage());
+      return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public ResponseEntity<?> deleteData(String auth) {
+    String token = tokenService.getToken(auth);
+    if (token.isEmpty()) {
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.UNAUTHORIZED);
+      apiError.setMessage("Missing token");
+      return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
+    }
+    try {
+      String email = tokenService.getEmailFromToken(token);
+      Optional<UserCredentials> userCredentialsOptional =
+          this.findByEmail(email);
+      if (userCredentialsOptional.isPresent()) {
+        UserCredentials credentials = userCredentialsOptional.get();
+        User user = credentials.getUser_id();
+        userRepository.delete(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+      }
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.CONFLICT);
+      apiError.setMessage("User not found");
+      return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
+    }catch (Exception e) {
+      System.out.println(e);
+      ApiError apiError = new ApiError();
+      apiError.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      apiError.setMessage(e.getMessage());
+      return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }  
   public ResponseEntity<?> registerUser(AuxUserDTO auxUserDTO) {
     if(auxUserDTO.getFirstName()== null || auxUserDTO.getFirstName().isEmpty() || 
       auxUserDTO.getLastName()== null || auxUserDTO.getLastName().isEmpty() ||
